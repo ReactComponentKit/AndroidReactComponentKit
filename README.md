@@ -1,2 +1,0 @@
-# AndroidReactComponentKit
-ReactComponentKit for Android
