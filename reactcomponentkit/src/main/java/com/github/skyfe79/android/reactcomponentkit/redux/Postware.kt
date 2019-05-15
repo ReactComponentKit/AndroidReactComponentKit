@@ -1,4 +1,4 @@
-package com.github.skyfe79.android.reactcomponentkit
+package com.github.skyfe79.android.reactcomponentkit.redux
 
 import io.reactivex.Observable
 
