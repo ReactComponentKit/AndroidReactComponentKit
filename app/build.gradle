@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -34,4 +32,5 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"
     implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
     implementation project(':reactcomponentkit')
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
 }

@@ -29,6 +29,10 @@ class Store<S: State> {
         this.postwares = postwares
     }
 
+    fun deinitialize() {
+
+    }
+
     @Suppress("UNCHECKED_CAST")
     fun dispatch(action: Action): Single<State> {
         return Single.create { single ->
