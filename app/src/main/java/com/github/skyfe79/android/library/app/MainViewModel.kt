@@ -5,11 +5,18 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.Error
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
+import com.jakewharton.rxrelay2.BehaviorRelay
 
 
 data class MainState(var count: Int): State()
 
 class MainViewModel: RootViewModelType<MainState>() {
+
+    class Output {
+        val count: BehaviorRelay<Int> = BehaviorRelay.createDefault(0)
+    }
+
+    val output = Output()
 
     override fun setupStore() {
         store.set(
@@ -25,7 +32,7 @@ class MainViewModel: RootViewModelType<MainState>() {
     }
 
     override fun on(newState: MainState) {
-        println(newState)
+        output.count.accept(newState.count)
     }
 
     override fun on(error: Error) {

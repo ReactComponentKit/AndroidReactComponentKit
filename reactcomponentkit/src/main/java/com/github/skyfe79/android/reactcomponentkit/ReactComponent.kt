@@ -21,6 +21,19 @@ interface ReactComponent {
     var dispatchEventBus: EventBus<ComponentDispatchEvent>
 }
 
+abstract class ReactComponentImpl(override var token: Token, override var receiveState: Boolean): ReactComponent {
+    override var newStateEventBus: EventBus<ComponentNewStateEvent>? = if (receiveState) EventBus(token) else null
+    override var dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
+
+    init {
+//        newStateEventBus.on { event ->
+//            when(event) {
+//                is ComponentNewStateEvent.on ->
+//            }
+//        }
+    }
+}
+
 //class Mycomponent(override var token: Token, override var receiveState: Boolean) : ReactComponent {
 //
 //    override var newStateEventBus: EventBus<ComponentNewStateEvent>? = if (receiveState) EventBus(token) else null

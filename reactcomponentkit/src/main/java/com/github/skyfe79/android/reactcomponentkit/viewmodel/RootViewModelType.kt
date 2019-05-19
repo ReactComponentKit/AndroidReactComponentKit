@@ -8,7 +8,6 @@ import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.reactcomponentkit.redux.ViewModelType
 
 abstract class RootViewModelType<S: State>: ViewModelType<S>() {
-
     val token: Token = Token()
     val eventBus: EventBus<ComponentNewStateEvent> = EventBus(token)
     private val dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)

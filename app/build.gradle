@@ -33,4 +33,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
     implementation project(':reactcomponentkit')
     implementation 'android.arch.lifecycle:extensions:1.1.1'
+
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
 }

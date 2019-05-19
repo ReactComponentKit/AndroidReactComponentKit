@@ -88,4 +88,5 @@ abstract class ViewModelType<S: State>: ViewModel() {
     abstract fun beforeDispatch(action: Action): Action
     abstract fun on(newState: S)
     abstract fun on(error: Error)
+
 }
