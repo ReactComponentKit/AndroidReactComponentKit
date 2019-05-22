@@ -11,7 +11,7 @@ import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 
-abstract class ViewGroupComponent(override var token: Token, override var receiveState: Boolean): AnkoComponent<ViewGroup>, ReactComponent {
+abstract class ViewComponent(override var token: Token, override var receiveState: Boolean = true): AnkoComponent<ViewGroup>, ReactComponent {
 
     override var newStateEventBus: EventBus<ComponentNewStateEvent>? = if (receiveState) EventBus(token) else null
     override var dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
@@ -20,12 +20,11 @@ abstract class ViewGroupComponent(override var token: Token, override var receiv
         newStateEventBus?.let {
             it.on { event ->
                 when (event) {
-                    is ComponentNewStateEvent.on -> applyNew(event.state)
+                    is ComponentNewStateEvent.On -> applyNew(event.state)
                 }
             }
         }
     }
-
 
     override fun createView(ui: AnkoContext<ViewGroup>): View {
         return layout(ui)

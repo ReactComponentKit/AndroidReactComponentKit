@@ -2,6 +2,7 @@ package com.github.skyfe79.android.reactcomponentkit.eventbus
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.lang.Exception
 import org.greenrobot.eventbus.EventBus as GreenRobotEventBus
 
 interface EventType
@@ -84,11 +85,19 @@ class EventBus<T: EventType>(val token: Token? = null) {
         event?.let { e ->
             if (token != null) {
                 if (token == this@EventBus.token) {
-                    handle(e)
+                    try {
+                        handle(e)
+                    } catch (_: Exception) {
+                        //ignore it
+                    }
                 }
             } else {
                 // broadcast if token is null
-                handle(e)
+                try {
+                    handle(e)
+                } catch (_: Exception) {
+                    //ignore it
+                }
             }
         }
     }

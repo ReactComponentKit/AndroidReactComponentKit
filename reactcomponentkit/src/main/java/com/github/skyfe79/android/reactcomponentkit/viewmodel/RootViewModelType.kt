@@ -9,23 +9,22 @@ import com.github.skyfe79.android.reactcomponentkit.redux.ViewModelType
 
 abstract class RootViewModelType<S: State>: ViewModelType<S>() {
     val token: Token = Token()
-    val eventBus: EventBus<ComponentNewStateEvent> = EventBus(token)
+    private val newStateEventBus: EventBus<ComponentNewStateEvent> = EventBus(token)
     private val dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
 
     init {
         dispatchEventBus.on { event ->
             when(event) {
-                is ComponentDispatchEvent.dispatch -> this.dispatch(event.action)
+                is ComponentDispatchEvent.Dispatch -> this.dispatch(event.action)
             }
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun propagate(state: State) {
         val someState = state as? S
         someState?.let {
-            if (someState != this.store.state) {
-                eventBus.post(ComponentNewStateEvent.on(state))
-            }
+            newStateEventBus.post(ComponentNewStateEvent.On(state))
         }
     }
 }

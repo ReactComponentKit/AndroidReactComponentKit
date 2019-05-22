@@ -33,6 +33,7 @@ class MainViewModel: RootViewModelType<MainState>() {
 
     override fun on(newState: MainState) {
         output.count.accept(newState.count)
+        propagate(newState)
     }
 
     override fun on(error: Error) {
