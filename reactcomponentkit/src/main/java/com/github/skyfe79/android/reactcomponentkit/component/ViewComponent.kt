@@ -7,20 +7,35 @@ import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.EventBus
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 
-class ViewComponent(override var token: Token, override var receiveState: Boolean): AnkoComponent<ViewGroup>, ReactComponent {
+abstract class ViewGroupComponent(override var token: Token, override var receiveState: Boolean): AnkoComponent<ViewGroup>, ReactComponent {
 
-    override var newStateEventBus: EventBus<ComponentNewStateEvent>?
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
-    override var dispatchEventBus: EventBus<ComponentDispatchEvent>
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    override var newStateEventBus: EventBus<ComponentNewStateEvent>? = if (receiveState) EventBus(token) else null
+    override var dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
 
-
-    override fun createView(ui: AnkoContext<ViewGroup>): View = with(ui) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    init {
+        newStateEventBus?.let {
+            it.on { event ->
+                when (event) {
+                    is ComponentNewStateEvent.on -> applyNew(event.state)
+                }
+            }
+        }
     }
+
+
+    override fun createView(ui: AnkoContext<ViewGroup>): View {
+        return layout(ui)
+    }
+
+    abstract fun layout(ui: AnkoContext<ViewGroup>): View
+    private fun applyNew(state: State) {
+        on(state)
+    }
+
+    abstract fun on(state: State)
+
 }

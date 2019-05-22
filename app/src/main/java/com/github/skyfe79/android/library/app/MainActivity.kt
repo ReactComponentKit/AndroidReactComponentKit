@@ -9,14 +9,16 @@ import org.jetbrains.anko.*
 class MainActivity : FragmentActivity() {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var layout: MainViewLayout
+    private lateinit var layout: MainViewLayout2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        layout = MainViewLayout(viewModel)
+//        MainViewLayout2(viewModel).setContentView(this)
+
+        layout = MainViewLayout2(viewModel)
         layout.bindTo(this)
         layout.setContentView(this)
         layout.setupViewModelOutputs()
