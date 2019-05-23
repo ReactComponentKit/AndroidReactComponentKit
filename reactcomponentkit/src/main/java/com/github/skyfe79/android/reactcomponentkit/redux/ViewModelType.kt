@@ -85,8 +85,8 @@ abstract class ViewModelType<S: State>: ViewModel() {
         actionQueue.enqueue(Pair(action, applyNewState))
     }
 
-    abstract fun beforeDispatch(action: Action): Action
-    abstract fun on(newState: S)
-    abstract fun on(error: Error)
+    open fun beforeDispatch(action: Action): Action = action
+    open fun on(error: Error) = Unit
 
+    abstract fun on(newState: S)
 }

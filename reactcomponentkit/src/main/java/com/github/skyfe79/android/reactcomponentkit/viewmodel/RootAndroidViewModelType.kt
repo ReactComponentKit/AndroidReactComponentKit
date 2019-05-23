@@ -12,6 +12,7 @@ abstract class RootAndroidViewModelType<S: State>(application: Application): And
     val token: Token = Token()
     private val newStateEventBus: EventBus<ComponentNewStateEvent> = EventBus(token)
     private val dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
+    private var previousState: S? = null
 
     init {
         dispatchEventBus.on { event ->
@@ -24,8 +25,11 @@ abstract class RootAndroidViewModelType<S: State>(application: Application): And
     @Suppress("UNCHECKED_CAST")
     fun propagate(state: State) {
         val someState = state as? S
-        someState?.let {
-            newStateEventBus.post(ComponentNewStateEvent.On(state))
+        if (previousState != someState) {
+            someState?.let {
+                newStateEventBus.post(ComponentNewStateEvent.On(state))
+            }
         }
+        previousState = someState
     }
 }

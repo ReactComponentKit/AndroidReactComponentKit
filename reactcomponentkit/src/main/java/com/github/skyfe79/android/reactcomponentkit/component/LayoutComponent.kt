@@ -1,7 +1,7 @@
 package com.github.skyfe79.android.reactcomponentkit.component
 
+import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.view.ViewGroup
 import com.github.skyfe79.android.reactcomponentkit.ComponentDispatchEvent
 import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
@@ -11,7 +11,7 @@ import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 
-abstract class ViewComponent(override var token: Token, override var receiveState: Boolean = true): AnkoComponent<ViewGroup>, ReactComponent {
+abstract class LayoutComponent<in T>(override var token: Token, override var receiveState: Boolean) : AnkoComponent<T>, ReactComponent {
 
     override var newStateEventBus: EventBus<ComponentNewStateEvent>? = if (receiveState) EventBus(token) else null
     override var dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
@@ -26,10 +26,5 @@ abstract class ViewComponent(override var token: Token, override var receiveStat
         }
     }
 
-    override fun createView(ui: AnkoContext<ViewGroup>): View {
-        return layout(ui)
-    }
-
-    abstract fun layout(ui: AnkoContext<ViewGroup>): View
     abstract fun on(state: State)
 }

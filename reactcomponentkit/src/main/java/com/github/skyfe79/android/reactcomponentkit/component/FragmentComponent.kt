@@ -54,7 +54,7 @@ abstract class FragmentComponent: Fragment(), ReactComponent {
         newStateEventBus?.let {
             it.on { event ->
                 when (event) {
-                    is ComponentNewStateEvent.On -> applyNew(event.state)
+                    is ComponentNewStateEvent.On -> on(event.state)
                 }
             }
         }
@@ -69,10 +69,6 @@ abstract class FragmentComponent: Fragment(), ReactComponent {
     override fun onDetach() {
         super.onDetach()
         stopEventBus()
-    }
-
-    private fun applyNew(state: State) {
-        on(state)
     }
 
     abstract fun on(state: State)

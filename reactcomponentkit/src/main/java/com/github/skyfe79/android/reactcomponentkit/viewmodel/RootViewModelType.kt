@@ -11,6 +11,7 @@ abstract class RootViewModelType<S: State>: ViewModelType<S>() {
     val token: Token = Token()
     private val newStateEventBus: EventBus<ComponentNewStateEvent> = EventBus(token)
     private val dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
+    private var previousState: S? = null
 
     init {
         dispatchEventBus.on { event ->
@@ -23,8 +24,11 @@ abstract class RootViewModelType<S: State>: ViewModelType<S>() {
     @Suppress("UNCHECKED_CAST")
     fun propagate(state: State) {
         val someState = state as? S
-        someState?.let {
-            newStateEventBus.post(ComponentNewStateEvent.On(state))
+        if (previousState != someState) {
+            someState?.let {
+                newStateEventBus.post(ComponentNewStateEvent.On(state))
+            }
         }
+        previousState = someState
     }
 }

@@ -1,61 +1,35 @@
 package com.github.skyfe79.android.library.app
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.OnLifecycleEvent
-import android.support.v4.app.Fragment
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import com.github.skyfe79.android.library.app.action.IncreaseAction
-import com.github.skyfe79.android.reactcomponentkit.rx.AutoDisposeBag
-import com.github.skyfe79.android.reactcomponentkit.rx.DisposeBag
-import com.github.skyfe79.android.reactcomponentkit.rx.disposedBy
-import org.jetbrains.anko.*
+import com.github.skyfe79.android.library.app.action.ClickCounterExample2ButtonAction
+import com.github.skyfe79.android.library.app.action.ClickCounterExampleButtonAction
+import com.github.skyfe79.android.reactcomponentkit.component.LayoutComponent
+import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.redux.State
+import kotlinx.android.synthetic.main.activity_main.view.*
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.include
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class MainViewLayout(val viewModel: MainViewModel): AnkoComponent<MainActivity> {
+class MainViewLayout(override var token: Token, override var receiveState: Boolean = false)
+    : LayoutComponent<MainActivity>(token, receiveState) {
 
-    lateinit var countTextView: TextView
-    lateinit var actionButton: Button
-    private val disposeBag = AutoDisposeBag()
+    /**
+     * You can use layout xml file like below.
+     */
+    override fun createView(ui: AnkoContext<MainActivity>): View {
+        val view = ui.include<View>(R.layout.activity_main)
 
-    override fun createView(ui: AnkoContext<MainActivity>): View = with(ui) {
-        val layout = relativeLayout {
-            val ID_TEXTVIEW = 1
-
-            countTextView = textView("${viewModel.output.count.value}")
-            actionButton = button("Click Me")
-
-            countTextView.lparams(width = wrapContent) {
-                id = ID_TEXTVIEW
-                centerInParent()
-            }
-
-            actionButton.lparams(wrapContent) {
-                topMargin = dip(10)
-                below(ID_TEXTVIEW)
-                centerHorizontally()
-            }
+        view.counterExampleButton.onClick {
+            dispatch(ClickCounterExampleButtonAction)
         }
 
-        return layout
-    }
-
-    fun setupViewModelOutputs() {
-        actionButton.onClick {
-            viewModel.dispatch(IncreaseAction())
+        view.counterExample2Button.onClick {
+            dispatch(ClickCounterExample2ButtonAction)
         }
 
-        viewModel.output.count
-            .subscribe {
-                countTextView.text = "COUNT: $it"
-            }
-            .disposedBy(disposeBag)
+        return view
     }
 
-    fun bindTo(lifecycleOwner: LifecycleOwner) {
-        disposeBag.bindTo(lifecycleOwner)
-    }
+    override fun on(state: State) = Unit
 }

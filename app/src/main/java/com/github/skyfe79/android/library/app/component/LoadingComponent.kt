@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.skyfe79.android.library.app.MainState
 import com.github.skyfe79.android.reactcomponentkit.component.FragmentComponent
+import com.github.skyfe79.android.reactcomponentkit.component.LayoutComponent
+import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.UI

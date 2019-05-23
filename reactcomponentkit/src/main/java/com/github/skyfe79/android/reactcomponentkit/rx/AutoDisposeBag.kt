@@ -7,10 +7,10 @@ import android.arch.lifecycle.OnLifecycleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-class AutoDisposeBag: LifecycleObserver {
+class AutoDisposeBag(lifecycleOwner: LifecycleOwner): LifecycleObserver {
     private var disposables: CompositeDisposable = CompositeDisposable()
 
-    fun bindTo(lifecycleOwner: LifecycleOwner) {
+    init {
         lifecycleOwner.lifecycle.addObserver(this)
     }
 

@@ -1,43 +1,35 @@
 package com.github.skyfe79.android.library.app
 
-import com.github.skyfe79.android.library.app.redux.countReducer
-import com.github.skyfe79.android.reactcomponentkit.redux.Action
-import com.github.skyfe79.android.reactcomponentkit.redux.Error
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.OnLifecycleEvent
+import com.github.skyfe79.android.library.app.action.ResetRouteAction
+import com.github.skyfe79.android.reactcomponentkit.redux.Output
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
-import com.jakewharton.rxrelay2.BehaviorRelay
+import com.github.skyfe79.android.library.app.redux.routeReducer
+import com.github.skyfe79.android.library.app.redux.reset
 
-
-data class MainState(var count: Int): State()
+enum class MainRoute {
+    None,
+    CounterExample,
+    CounterExample2
+}
+data class MainState(var route: MainRoute): State()
 
 class MainViewModel: RootViewModelType<MainState>() {
 
-    class Output {
-        val count: BehaviorRelay<Int> = BehaviorRelay.createDefault(0)
-    }
-
-    val output = Output()
+    val route: Output<MainRoute> = Output(MainRoute.None, ignoreCompareValue = true)
 
     override fun setupStore() {
         store.set(
-            initialState = MainState(0),
-            middlewares = arrayOf(),
-            reducers = arrayOf(::countReducer),
+            initialState = MainState(MainRoute.None),
+            middlewares = arrayOf(::reset),
+            reducers = arrayOf(::routeReducer),
             postwares = arrayOf()
         )
     }
 
-    override fun beforeDispatch(action: Action): Action {
-        return action
-    }
-
     override fun on(newState: MainState) {
-        output.count.accept(newState.count)
-        propagate(newState)
+        route.accept(newState.route)
     }
-
-    override fun on(error: Error) {
-        println(error.error.localizedMessage)
-    }
-
 }

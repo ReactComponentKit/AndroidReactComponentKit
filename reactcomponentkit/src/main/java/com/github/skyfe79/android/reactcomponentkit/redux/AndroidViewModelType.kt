@@ -86,7 +86,8 @@ abstract class AndroidViewModelType<S: State>(application: Application): Android
         actionQueue.enqueue(Pair(action, applyNewState))
     }
 
-    abstract fun beforeDispatch(action: Action): Action
+    open fun beforeDispatch(action: Action): Action = action
+    open fun on(error: Error) = Unit
+
     abstract fun on(newState: S)
-    abstract fun on(error: Error)
 }

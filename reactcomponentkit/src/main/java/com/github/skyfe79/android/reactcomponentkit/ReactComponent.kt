@@ -19,4 +19,8 @@ interface ReactComponent {
     var receiveState: Boolean
     var newStateEventBus: EventBus<ComponentNewStateEvent>?
     var dispatchEventBus: EventBus<ComponentDispatchEvent>
+
+    fun dispatch(action: Action) {
+        dispatchEventBus.post(ComponentDispatchEvent.Dispatch(action))
+    }
 }

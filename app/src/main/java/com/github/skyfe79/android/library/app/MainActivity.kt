@@ -3,31 +3,50 @@ package com.github.skyfe79.android.library.app
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import com.github.skyfe79.android.library.app.component.LoadingComponent
-import com.github.skyfe79.android.reactcomponentkit.component.*
+import android.support.v7.app.AppCompatActivity
+import com.github.skyfe79.android.library.app.action.ClickCounterExampleButtonAction
+import com.github.skyfe79.android.library.app.action.ResetRouteAction
+import com.github.skyfe79.android.library.app.examples.counter.CounterActivity
+import com.github.skyfe79.android.library.app.examples.counter.CounterActivity2
+import com.github.skyfe79.android.reactcomponentkit.rx.AutoDisposeBag
+import com.github.skyfe79.android.reactcomponentkit.rx.disposedBy
 import org.jetbrains.anko.*
+import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class MainActivity : FragmentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var layout: MainViewLayout2
-    private val loadingComponent: LoadingComponent by lazy {
-        fragmentComponent<LoadingComponent>(viewModel.token, true)
+    private val layout: MainViewLayout by lazy {
+        MainViewLayout(viewModel.token)
     }
+    private val disposeBag = AutoDisposeBag(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        LoadingComponent()
-
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
-        layout = MainViewLayout2(viewModel)
-        layout.bindTo(this)
         layout.setContentView(this)
-        layout.setupViewModelOutputs()
 
-        replaceFragment(loadingComponent, R.id.fragmentContainer)
+        handleViewModelOutput()
+    }
+
+    private fun handleViewModelOutput() {
+        viewModel
+            .route
+            .asObservable()
+            .subscribe {
+                handleRoute(it)
+            }
+            .disposedBy(disposeBag)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.dispatch(ResetRouteAction)
+    }
+
+    private fun handleRoute(route: MainRoute) = when (route) {
+        MainRoute.CounterExample -> startActivity<CounterActivity>()
+        MainRoute.CounterExample2 -> startActivity<CounterActivity2>()
+        MainRoute.None -> Unit
     }
 }
