@@ -3,6 +3,7 @@ package com.github.skyfe79.android.library.app
 import android.view.View
 import com.github.skyfe79.android.library.app.action.ClickCounterExample2ButtonAction
 import com.github.skyfe79.android.library.app.action.ClickCounterExampleButtonAction
+import com.github.skyfe79.android.library.app.action.ClickRecyclerViewExampleButtonAction
 import com.github.skyfe79.android.reactcomponentkit.component.LayoutComponent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
@@ -26,6 +27,10 @@ class MainViewLayout(override var token: Token, override var receiveState: Boole
 
         view.counterExample2Button.onClick {
             dispatch(ClickCounterExample2ButtonAction)
+        }
+
+        view.recyclerViewExampleButton.onClick {
+            dispatch(ClickRecyclerViewExampleButtonAction)
         }
 
         return view

@@ -4,14 +4,13 @@ package com.github.skyfe79.android.library.app
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.github.skyfe79.android.library.app.action.ClickCounterExampleButtonAction
 import com.github.skyfe79.android.library.app.action.ResetRouteAction
 import com.github.skyfe79.android.library.app.examples.counter.CounterActivity
 import com.github.skyfe79.android.library.app.examples.counter.CounterActivity2
+import com.github.skyfe79.android.library.app.examples.recyclerview.RecyclerActivity
 import com.github.skyfe79.android.reactcomponentkit.rx.AutoDisposeBag
 import com.github.skyfe79.android.reactcomponentkit.rx.disposedBy
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private fun handleRoute(route: MainRoute) = when (route) {
         MainRoute.CounterExample -> startActivity<CounterActivity>()
         MainRoute.CounterExample2 -> startActivity<CounterActivity2>()
+        MainRoute.RecyclerViewExample -> startActivity<RecyclerActivity>()
         MainRoute.None -> Unit
     }
 }

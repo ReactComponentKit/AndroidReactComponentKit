@@ -38,7 +38,7 @@ abstract class FragmentComponent: Fragment(), ReactComponent {
     override var dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
     internal var state: FragmentComponentState = FragmentComponentState.NONE
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if (arguments != null) {

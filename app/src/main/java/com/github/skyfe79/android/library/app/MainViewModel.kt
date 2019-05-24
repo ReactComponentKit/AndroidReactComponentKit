@@ -12,7 +12,8 @@ import com.github.skyfe79.android.library.app.redux.reset
 enum class MainRoute {
     None,
     CounterExample,
-    CounterExample2
+    CounterExample2,
+    RecyclerViewExample
 }
 data class MainState(var route: MainRoute): State()
 
