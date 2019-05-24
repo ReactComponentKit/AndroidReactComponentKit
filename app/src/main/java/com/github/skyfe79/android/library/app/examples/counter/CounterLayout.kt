@@ -20,8 +20,8 @@ class CounterLayout(token: Token, receiveState: Boolean): LayoutComponent<Counte
     }
 
     lateinit var countTextView: TextView
-    lateinit var increaseButton: Button
-    lateinit var decreaseButton: Button
+    private lateinit var increaseButton: Button
+    private lateinit var decreaseButton: Button
 
     override fun createView(ui: AnkoContext<CounterActivity>): View = with(ui) {
         val view = relativeLayout {

@@ -5,11 +5,13 @@ import android.view.ViewGroup
 import com.github.skyfe79.android.reactcomponentkit.ComponentDispatchEvent
 import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
+import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.eventbus.EventBus
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
+
 
 abstract class ViewComponent(override var token: Token, override var receiveState: Boolean = true): AnkoComponent<ViewGroup>, ReactComponent {
 
@@ -26,10 +28,18 @@ abstract class ViewComponent(override var token: Token, override var receiveStat
         }
     }
 
+    private var cacheLayout: View? = null
     override fun createView(ui: AnkoContext<ViewGroup>): View {
-        return layout(ui)
+        if (cacheLayout != null) {
+            return cacheLayout!!
+        }
+        cacheLayout = layout(ui)
+        return cacheLayout!!
     }
 
     abstract fun layout(ui: AnkoContext<ViewGroup>): View
     abstract fun on(state: State)
+    abstract fun on(item: ItemModel, position: Int)
 }
+
+

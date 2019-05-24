@@ -20,9 +20,6 @@ internal enum class FragmentComponentState {
 abstract class FragmentComponent: Fragment(), ReactComponent {
 
     companion object {
-        const val STATE_SHOW = 1
-        const val STATE_HIDE = 2
-
         inline fun <reified T: FragmentComponent> newInstance(token: Token, receiveState: Boolean): T {
             val args = Bundle()
             args.putParcelable("token", token)
