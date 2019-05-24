@@ -2,8 +2,8 @@ package com.github.skyfe79.android.reactcomponentkit.component
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.github.skyfe79.android.reactcomponentkit.ComponentDispatchEvent
 import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent

@@ -1,6 +1,6 @@
 package com.github.skyfe79.android.reactcomponentkit.component
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import com.github.skyfe79.android.reactcomponentkit.ComponentDispatchEvent
 import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent

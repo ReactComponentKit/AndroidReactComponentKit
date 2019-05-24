@@ -1,6 +1,6 @@
 package com.github.skyfe79.android.reactcomponentkit.redux
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

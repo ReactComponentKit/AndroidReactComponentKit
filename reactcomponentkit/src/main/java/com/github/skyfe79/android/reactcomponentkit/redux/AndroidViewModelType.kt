@@ -1,7 +1,7 @@
 package com.github.skyfe79.android.reactcomponentkit.redux
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
+import androidx.lifecycle.AndroidViewModel
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.android.schedulers.AndroidSchedulers

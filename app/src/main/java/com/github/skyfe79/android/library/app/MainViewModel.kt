@@ -1,7 +1,7 @@
 package com.github.skyfe79.android.library.app
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
 import com.github.skyfe79.android.library.app.action.ResetRouteAction
 import com.github.skyfe79.android.reactcomponentkit.redux.Output
 import com.github.skyfe79.android.reactcomponentkit.redux.State

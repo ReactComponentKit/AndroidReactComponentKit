@@ -1,8 +1,8 @@
 package com.github.skyfe79.android.library.app.examples.counter
 
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import org.jetbrains.anko.setContentView
 
 class CounterActivity: AppCompatActivity() {
