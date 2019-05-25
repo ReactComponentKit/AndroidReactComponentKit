@@ -9,4 +9,6 @@ interface ViewComponentClassProvider {
 
 interface ItemModel: ViewComponentClassProvider {
     val id: Int
+    val isSticky: Boolean
+        get() = false
 }

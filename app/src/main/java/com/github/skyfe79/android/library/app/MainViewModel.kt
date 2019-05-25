@@ -19,7 +19,7 @@ data class MainState(var route: MainRoute): State()
 
 class MainViewModel: RootViewModelType<MainState>() {
 
-    val route: Output<MainRoute> = Output(MainRoute.None, ignoreCompareValue = true)
+    val route: Output<MainRoute> = Output(MainRoute.None)
 
     override fun setupStore() {
         store.set(
@@ -31,6 +31,6 @@ class MainViewModel: RootViewModelType<MainState>() {
     }
 
     override fun on(newState: MainState) {
-        route.accept(newState.route)
+        route.acceptWithoutCompare(newState.route)
     }
 }
