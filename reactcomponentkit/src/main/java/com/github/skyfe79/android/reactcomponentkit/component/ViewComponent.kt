@@ -37,11 +37,29 @@ abstract class ViewComponent(override var token: Token, override var receiveStat
         return view
     }
 
+    /**
+     * Configure component's ui at here
+     */
     abstract fun layout(ui: AnkoContext<Context>): View
+
+    /**
+     * It is called when the component is standalone.
+     */
     abstract fun on(state: State)
+
+    /**
+     * It is only called when the component is in RecyclerView's row
+     */
     abstract fun on(item: ItemModel, position: Int)
 }
 
+/**
+ * You can ViewComponents in Anko DSL with below extensions.
+ * example:
+ * verticalLayout {
+ *  component(MyViewComponent(...))
+ * }
+ */
 inline fun ViewManager.component(component: ViewComponent, theme: Int = 0): View {
     return component(component, theme) {}
 }
