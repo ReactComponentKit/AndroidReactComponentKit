@@ -22,7 +22,7 @@ class RecyclerActivity : AppCompatActivity() {
         this.recyclerView.layoutManager = LinearLayoutManager(this)
         this.recyclerView.setHasFixedSize(true)
 
-        adapter = RecyclerViewAdapter(token = Token.empty)
+        adapter = RecyclerViewAdapter(token = Token.empty, useDiff = true)
         adapter.register(TextMessageViewComponent::class)
         adapter.register(ProfileViewComponent::class)
         recyclerView.adapter = adapter

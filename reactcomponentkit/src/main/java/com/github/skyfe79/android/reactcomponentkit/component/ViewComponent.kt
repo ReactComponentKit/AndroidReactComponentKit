@@ -2,7 +2,6 @@ package com.github.skyfe79.android.reactcomponentkit.component
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewManager
 import com.github.skyfe79.android.reactcomponentkit.ComponentDispatchEvent
 import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent

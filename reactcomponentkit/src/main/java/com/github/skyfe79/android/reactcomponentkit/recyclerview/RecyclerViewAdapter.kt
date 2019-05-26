@@ -1,19 +1,27 @@
 package com.github.skyfe79.android.reactcomponentkit.recyclerview
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.component.ViewComponent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.recyclerview.sticky.StickyHeaders
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import kotlin.reflect.KClass
 
-open class RecyclerViewAdapter(private val token: Token): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+open class RecyclerViewAdapter(private val token: Token, private val useDiff: Boolean = false): RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyHeaders {
 
-    private var items: MutableList<ItemModel> = mutableListOf()
+    private var items: Array<ItemModel> = arrayOf()
     private val viewHolderFactory: MutableMap<Int, KClass<*>> = mutableMapOf()
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    override fun isStickyHeader(position: Int): Boolean {
+        return items[position].isSticky
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -41,8 +49,42 @@ open class RecyclerViewAdapter(private val token: Token): RecyclerView.Adapter<R
         viewHolderFactory[component.qualifiedName.hashCode()] = component
     }
 
-    fun set(items: Array<ItemModel>) {
-        this.items = items.toMutableList()
-        this.notifyDataSetChanged()
+    open fun set(items: Array<ItemModel>) {
+        if (!useDiff) {
+            this.items = items
+            this.notifyDataSetChanged()
+        } else {
+            doAsync {
+                weakRef.get()?.let {
+                    val diffCallback = ItemModelDiffCallback(it.items, items)
+                    val diff = DiffUtil.calculateDiff(diffCallback)
+                    uiThread {
+                        weakRef.get()?.let { adapter ->
+                            adapter.items = items
+                            diff.dispatchUpdatesTo(adapter)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private class ItemModelDiffCallback(private val current: Array<ItemModel>, private val update: Array<ItemModel>): DiffUtil.Callback() {
+
+    override fun getOldListSize(): Int {
+        return current.size
+    }
+
+    override fun getNewListSize(): Int {
+        return update.size
+    }
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return current[oldItemPosition].id == update[newItemPosition].id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+       return current[oldItemPosition] == update[newItemPosition]
     }
 }
