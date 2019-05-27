@@ -8,7 +8,7 @@ interface TextMessageProvider {
     val message: String
 }
 
-data class TextMessage(override val message: String): ItemModel(), TextMessageProvider {
+data class TextMessage(override val message: String, override val isSticky: Boolean = false): ItemModel(), TextMessageProvider {
     override val id: Int = hashCode()
     override val componentClass: KClass<*> = ProfileViewComponent::class
 }

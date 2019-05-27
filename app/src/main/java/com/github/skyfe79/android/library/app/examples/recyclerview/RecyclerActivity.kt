@@ -9,6 +9,7 @@ import com.github.skyfe79.android.library.app.examples.recyclerview.component.Te
 import com.github.skyfe79.android.library.app.examples.recyclerview.model.TextMessage
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewAdapter
+import com.github.skyfe79.android.reactcomponentkit.recyclerview.sticky.StickyHeadersLinearLayoutManager
 import kotlinx.android.synthetic.main.activity_recycler.*
 
 class RecyclerActivity : AppCompatActivity() {
@@ -19,7 +20,7 @@ class RecyclerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler)
 
-        this.recyclerView.layoutManager = LinearLayoutManager(this)
+        this.recyclerView.layoutManager = StickyHeadersLinearLayoutManager<RecyclerViewAdapter>(this)
         this.recyclerView.setHasFixedSize(true)
 
         adapter = RecyclerViewAdapter(token = Token.empty, useDiff = true)
@@ -28,29 +29,29 @@ class RecyclerActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         adapter.set(listOf(
-            TextMessage("안녕하세요1"),
-            TextMessage("안녕하세요2"),
-            TextMessage("안녕하세요3"),
-            TextMessage("안녕하세요4"),
-            TextMessage("안녕하세요5"),
+            TextMessage("Hello, Wordl1", isSticky = true),
+            TextMessage("Hello, World2"),
+            TextMessage("Hello, World3"),
+            TextMessage("Hello, World4"),
+            TextMessage("Hello, World5"),
 
-            TextMessage("안녕하세요6"),
-            TextMessage("안녕하세요7"),
-            TextMessage("안녕하세요8"),
-            TextMessage("안녕하세요9"),
-            TextMessage("안녕하세요10"),
+            TextMessage("Hello, World6", isSticky = true),
+            TextMessage("Hello, World7"),
+            TextMessage("Hello, World8"),
+            TextMessage("Hello, World9"),
+            TextMessage("Hello, World10"),
 
-            TextMessage("안녕하세요11"),
-            TextMessage("안녕하세요12"),
-            TextMessage("안녕하세요13"),
-            TextMessage("안녕하세요14"),
-            TextMessage("안녕하세요15"),
+            TextMessage("Hello, World11"),
+            TextMessage("Hello, World12"),
+            TextMessage("Hello, World13"),
+            TextMessage("Hello, World14"),
+            TextMessage("Hello, World15"),
 
-            TextMessage("안녕하세요16"),
-            TextMessage("안녕하세요17"),
-            TextMessage("안녕하세요18"),
-            TextMessage("안녕하세요19"),
-            TextMessage("안녕하세요20")
+            TextMessage("Hello, World16"),
+            TextMessage("Hello, World17"),
+            TextMessage("Hello, World18"),
+            TextMessage("Hello, World19"),
+            TextMessage("Hello, World20")
         ))
     }
 }

@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.github.skyfe79.android.reactcomponentkit.recyclerview.layout.DiffLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
  * @link https://github.com/Doist/RecyclerViewExtensions/blob/master/StickyHeaders
  */
 public class StickyHeadersLinearLayoutManager<T extends RecyclerView.Adapter & StickyHeaders>
-        extends LinearLayoutManager {
+        extends DiffLinearLayoutManager {
     private T mAdapter;
 
     private float mTranslationX;

@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.github.skyfe79.android.reactcomponentkit.recyclerview.layout.DiffGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  * @link https://github.com/Doist/RecyclerViewExtensions/blob/master/StickyHeaders
  */
 public class StickyHeadersGridLayoutManager<T extends RecyclerView.Adapter & StickyHeaders>
-        extends GridLayoutManager {
+        extends DiffGridLayoutManager {
     private T mAdapter;
 
     private float mTranslationX;

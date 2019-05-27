@@ -10,7 +10,7 @@ import android.view.ViewTreeObserver;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import com.github.skyfe79.android.reactcomponentkit.recyclerview.layout.DiffStaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  * @link https://github.com/Doist/RecyclerViewExtensions/blob/master/StickyHeaders
  */
 public class StickyHeadersStaggeredGridLayoutManager<T extends RecyclerView.Adapter & StickyHeaders>
-        extends StaggeredGridLayoutManager {
+        extends DiffStaggeredGridLayoutManager {
     private T mAdapter;
 
     private float mTranslationX;
