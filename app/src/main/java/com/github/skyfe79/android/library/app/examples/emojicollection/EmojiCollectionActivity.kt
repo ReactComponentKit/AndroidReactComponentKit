@@ -3,6 +3,8 @@ package com.github.skyfe79.android.library.app.examples.emojicollection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.github.skyfe79.android.library.app.R
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.AddEmojiAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.RemoveEmojiAction
@@ -11,6 +13,8 @@ import com.github.skyfe79.android.library.app.examples.emojicollection.component
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.diff.DiffGridLayoutManager
 import com.github.skyfe79.android.library.app.examples.emojicollection.util.EmojiHelper
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewAdapter
+import com.github.skyfe79.android.reactcomponentkit.recyclerview.diff.DiffLinearLayoutManager
+import com.github.skyfe79.android.reactcomponentkit.recyclerview.diff.DiffStaggeredGridLayoutManager
 import com.github.skyfe79.android.reactcomponentkit.rx.AutoDisposeBag
 import com.github.skyfe79.android.reactcomponentkit.rx.disposedBy
 import kotlinx.android.synthetic.main.activity_emoji_collection.*
