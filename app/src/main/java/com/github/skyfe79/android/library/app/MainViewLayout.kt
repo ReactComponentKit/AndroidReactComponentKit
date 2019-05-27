@@ -3,6 +3,7 @@ package com.github.skyfe79.android.library.app
 import android.view.View
 import com.github.skyfe79.android.library.app.action.ClickCounterExample2ButtonAction
 import com.github.skyfe79.android.library.app.action.ClickCounterExampleButtonAction
+import com.github.skyfe79.android.library.app.action.ClickEmojiExampleButtonAction
 import com.github.skyfe79.android.library.app.action.ClickRecyclerViewExampleButtonAction
 import com.github.skyfe79.android.reactcomponentkit.component.LayoutComponent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
@@ -31,6 +32,10 @@ class MainViewLayout(override var token: Token, override var receiveState: Boole
 
         view.recyclerViewExampleButton.onClick {
             dispatch(ClickRecyclerViewExampleButtonAction)
+        }
+
+        view.emojiExampleButton.onClick {
+            dispatch(ClickEmojiExampleButtonAction)
         }
 
         return view

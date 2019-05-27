@@ -34,8 +34,8 @@ class TextMessageViewComponent(override var token: Token, override var receiveSt
     }
 
     override fun on(item: ItemModel, position: Int) {
-        val item = (item as? TextMessageProvider) ?: return
-        updateTextView(item)
+        val textMessage = (item as? TextMessageProvider) ?: return
+        updateTextView(textMessage)
     }
 
     private fun updateTextView(textMessage: TextMessageProvider) {

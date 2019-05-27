@@ -13,7 +13,8 @@ enum class MainRoute {
     None,
     CounterExample,
     CounterExample2,
-    RecyclerViewExample
+    RecyclerViewExample,
+    EmojiCollectionExample
 }
 data class MainState(var route: MainRoute): State()
 

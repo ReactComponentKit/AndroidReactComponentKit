@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.skyfe79.android.library.app.action.ResetRouteAction
 import com.github.skyfe79.android.library.app.examples.counter.CounterActivity
 import com.github.skyfe79.android.library.app.examples.counter.CounterActivity2
+import com.github.skyfe79.android.library.app.examples.emojicollection.EmojiCollectionActivity
 import com.github.skyfe79.android.library.app.examples.recyclerview.RecyclerActivity
 import com.github.skyfe79.android.reactcomponentkit.rx.AutoDisposeBag
 import com.github.skyfe79.android.reactcomponentkit.rx.disposedBy
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         MainRoute.CounterExample -> startActivity<CounterActivity>()
         MainRoute.CounterExample2 -> startActivity<CounterActivity2>()
         MainRoute.RecyclerViewExample -> startActivity<RecyclerActivity>()
+        MainRoute.EmojiCollectionExample -> startActivity<EmojiCollectionActivity>()
         MainRoute.None -> Unit
     }
 }

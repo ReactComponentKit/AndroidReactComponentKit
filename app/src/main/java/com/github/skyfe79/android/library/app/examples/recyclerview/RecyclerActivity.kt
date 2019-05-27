@@ -27,7 +27,7 @@ class RecyclerActivity : AppCompatActivity() {
         adapter.register(ProfileViewComponent::class)
         recyclerView.adapter = adapter
 
-        adapter.set(arrayOf(
+        adapter.set(listOf(
             TextMessage("안녕하세요1"),
             TextMessage("안녕하세요2"),
             TextMessage("안녕하세요3"),

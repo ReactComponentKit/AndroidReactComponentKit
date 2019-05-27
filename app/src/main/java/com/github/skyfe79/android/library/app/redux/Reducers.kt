@@ -5,6 +5,7 @@ import com.github.skyfe79.android.library.app.MainState
 import com.github.skyfe79.android.library.app.MainViewModel
 import com.github.skyfe79.android.library.app.action.ClickCounterExample2ButtonAction
 import com.github.skyfe79.android.library.app.action.ClickCounterExampleButtonAction
+import com.github.skyfe79.android.library.app.action.ClickEmojiExampleButtonAction
 import com.github.skyfe79.android.library.app.action.ClickRecyclerViewExampleButtonAction
 import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
@@ -24,6 +25,10 @@ fun MainViewModel.routeReducer(state: State, action: Action): Observable<State> 
         }
         is ClickRecyclerViewExampleButtonAction -> {
             val mutatedState = mainState.copy(route = MainRoute.RecyclerViewExample)
+            Observable.just(mutatedState)
+        }
+        is ClickEmojiExampleButtonAction -> {
+            val mutatedState = mainState.copy(route = MainRoute.EmojiCollectionExample)
             Observable.just(mutatedState)
         }
         else -> Observable.just(state)
