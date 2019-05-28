@@ -26,13 +26,19 @@
 
   <Button
     android:id="@+id/recyclerViewExampleButton"
-    android:text="RecyclerViewExample"
+    android:text="RecyclerView Example"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
 
   <Button
     android:id="@+id/emojiExampleButton"
     android:text="Emoji Collection Example"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+
+  <Button
+    android:id="@+id/collectionExampleButton"
+    android:text="CollectionView Example"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
 </LinearLayout>

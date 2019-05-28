@@ -7,3 +7,4 @@ object ClickCounterExampleButtonAction: Action
 object ClickCounterExample2ButtonAction: Action
 object ClickRecyclerViewExampleButtonAction: Action
 object ClickEmojiExampleButtonAction: Action
+object ClickCollectionViewExampleButtonAction: Action

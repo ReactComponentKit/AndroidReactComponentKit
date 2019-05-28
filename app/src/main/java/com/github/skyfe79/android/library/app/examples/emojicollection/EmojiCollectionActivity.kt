@@ -14,6 +14,7 @@ import com.github.skyfe79.android.reactcomponentkit.recyclerview.layout.DiffGrid
 import com.github.skyfe79.android.reactcomponentkit.rx.AutoDisposeBag
 import com.github.skyfe79.android.reactcomponentkit.rx.disposedBy
 import kotlinx.android.synthetic.main.activity_emoji_collection.*
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class EmojiCollectionActivity : AppCompatActivity() {
@@ -66,6 +67,19 @@ class EmojiCollectionActivity : AppCompatActivity() {
             .asObservable()
             .subscribe {
                 adapter.set(it)
+            }
+            .disposedBy(disposeBag)
+
+        viewModel
+            .routes
+            .asObservable()
+            .subscribe {
+                when(it) {
+                    is EmojiRoute.AlertEmoji -> {
+                        alert(it.emoji, "Hello").show()
+                    }
+                    else -> Unit
+                }
             }
             .disposedBy(disposeBag)
     }
