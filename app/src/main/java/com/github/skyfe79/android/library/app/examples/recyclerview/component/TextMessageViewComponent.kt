@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import com.github.skyfe79.android.library.app.examples.recyclerview.model.BackgroundColorProvider
 import com.github.skyfe79.android.library.app.examples.recyclerview.model.TextMessageProvider
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.component.ViewComponent
@@ -14,18 +15,20 @@ import com.github.skyfe79.android.reactcomponentkit.component.component
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.*
+import org.jetbrains.anko.coroutines.experimental.bg
 
 class TextMessageViewComponent(override var token: Token, override var receiveState: Boolean): ViewComponent(token, receiveState) {
     lateinit var textView: TextView
-
+    lateinit var rootLayout: View
     override fun layout(ui: AnkoContext<Context>): View = with(ui) {
-        verticalLayout {
+        rootLayout = verticalLayout {
             lparams(matchParent, wrapContent)
 
             textView = textView {
                 gravity = Gravity.CENTER
             }.lparams(matchParent, dip(50))
         }
+        return rootLayout
     }
 
     override fun on(state: State) {
@@ -43,7 +46,7 @@ class TextMessageViewComponent(override var token: Token, override var receiveSt
     }
 }
 
-class ProfileViewComponent(override var token: Token, override var receiveState: Boolean): ViewComponent(token, receiveState) {
+class SectionViewComponent(override var token: Token, override var receiveState: Boolean): ViewComponent(token, receiveState) {
     private var textMessageViewComponent = TextMessageViewComponent(token, receiveState)
 
     override fun layout(ui: AnkoContext<Context>): View = with(ui) {
@@ -57,10 +60,18 @@ class ProfileViewComponent(override var token: Token, override var receiveState:
     }
 
     override fun on(state: State) {
+        val bgColor = (state as? BackgroundColorProvider)
+        bgColor?.let {
+            textMessageViewComponent.rootLayout.backgroundColor = it.bgColor
+        }
         textMessageViewComponent.on(state)
     }
 
     override fun on(item: ItemModel, position: Int) {
+        val bgColor = (item as? BackgroundColorProvider)
+        bgColor?.let {
+            textMessageViewComponent.rootLayout.backgroundColor = it.bgColor
+        }
         textMessageViewComponent.on(item, position)
     }
 }

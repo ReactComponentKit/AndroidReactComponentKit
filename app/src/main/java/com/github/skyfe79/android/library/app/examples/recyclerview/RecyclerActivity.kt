@@ -2,9 +2,8 @@ package com.github.skyfe79.android.library.app.examples.recyclerview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.skyfe79.android.library.app.R
-import com.github.skyfe79.android.library.app.examples.recyclerview.component.ProfileViewComponent
+import com.github.skyfe79.android.library.app.examples.recyclerview.component.SectionViewComponent
 import com.github.skyfe79.android.library.app.examples.recyclerview.component.TextMessageViewComponent
 import com.github.skyfe79.android.library.app.examples.recyclerview.model.TextMessage
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
@@ -25,7 +24,7 @@ class RecyclerActivity : AppCompatActivity() {
 
         adapter = RecyclerViewAdapter(token = Token.empty, useDiff = true)
         adapter.register(TextMessageViewComponent::class)
-        adapter.register(ProfileViewComponent::class)
+        adapter.register(SectionViewComponent::class)
         recyclerView.adapter = adapter
 
         adapter.set(listOf(

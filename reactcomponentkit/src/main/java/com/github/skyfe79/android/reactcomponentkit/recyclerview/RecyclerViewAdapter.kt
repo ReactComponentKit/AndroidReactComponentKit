@@ -9,15 +9,20 @@ import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.sticky.StickyHeaders
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import kotlin.IllegalStateException
 import kotlin.reflect.KClass
 
 open class RecyclerViewAdapter(private val token: Token, private val useDiff: Boolean = false): RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyHeaders {
 
     private var items: MutableList<ItemModel> = mutableListOf()
-    private val viewHolderFactory: MutableMap<Int, KClass<*>> = mutableMapOf()
+    private val viewComponents: MutableMap<Int, KClass<*>> = mutableMapOf()
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return items[position].id.toLong()
     }
 
     override fun isStickyHeader(position: Int): Boolean {
@@ -30,11 +35,9 @@ open class RecyclerViewAdapter(private val token: Token, private val useDiff: Bo
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val cls = viewHolderFactory[viewType]
+        val cls = viewComponents[viewType] ?: throw IllegalStateException("viewComponent is null")
         val cell = RecyclerViewCell(token = token, receiveState = false)
-        cls?.let {
-            cell.viewComponent = it.java.constructors.first().newInstance(token, false) as ViewComponent
-        }
+        cell.viewComponent = cls.java.constructors.first().newInstance(token, false) as ViewComponent
         return cell.onCreateViewHolder(parent)
     }
 
@@ -44,15 +47,20 @@ open class RecyclerViewAdapter(private val token: Token, private val useDiff: Bo
         cellViewHolder.onBind(item, position)
     }
 
+    internal fun update(viewComponents: MutableMap<Int, KClass<*>>) {
+        this.viewComponents.clear()
+        this.viewComponents.putAll(viewComponents)
+    }
+
     fun register(component: KClass<*>) {
-        viewHolderFactory[component.qualifiedName.hashCode()] = component
+        viewComponents[component.qualifiedName.hashCode()] = component
     }
 
     open fun set(newItems: List<ItemModel>) {
         if (!useDiff) {
-            this.items.clear()
-            this.items.addAll(newItems)
-            this.notifyDataSetChanged()
+            items.clear()
+            items.addAll(newItems)
+            notifyDataSetChanged()
         } else {
             doAsync {
                 weakRef.get()?.let {
@@ -71,7 +79,7 @@ open class RecyclerViewAdapter(private val token: Token, private val useDiff: Bo
     }
 }
 
-private class ItemModelDiffCallback(private val current: List<ItemModel>, private val update: List<ItemModel>): DiffUtil.Callback() {
+internal class ItemModelDiffCallback(private val current: List<ItemModel>, private val update: List<ItemModel>): DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
         return current.size

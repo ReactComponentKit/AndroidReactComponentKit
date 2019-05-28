@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.skyfe79.android.library.app.action.ResetRouteAction
+import com.github.skyfe79.android.library.app.examples.collectionview.CollectionViewActivity
 import com.github.skyfe79.android.library.app.examples.counter.CounterActivity
 import com.github.skyfe79.android.library.app.examples.counter.CounterActivity2
 import com.github.skyfe79.android.library.app.examples.emojicollection.EmojiCollectionActivity
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         MainRoute.CounterExample2 -> startActivity<CounterActivity2>()
         MainRoute.RecyclerViewExample -> startActivity<RecyclerActivity>()
         MainRoute.EmojiCollectionExample -> startActivity<EmojiCollectionActivity>()
+        MainRoute.CollectionViewExample -> startActivity<CollectionViewActivity>()
         MainRoute.None -> Unit
     }
 }

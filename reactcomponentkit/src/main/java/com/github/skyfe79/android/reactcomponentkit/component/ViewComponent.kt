@@ -3,16 +3,19 @@ package com.github.skyfe79.android.reactcomponentkit.component
 import android.content.Context
 import android.view.View
 import android.view.ViewManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.skyfe79.android.reactcomponentkit.ComponentDispatchEvent
 import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
+import com.github.skyfe79.android.reactcomponentkit.collectionview.SectionContent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.EventBus
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.custom.ankoView
+import kotlin.reflect.KClass
 
 
 abstract class ViewComponent(override var token: Token, override var receiveState: Boolean = true): AnkoComponent<Context>, ReactComponent {
@@ -45,12 +48,17 @@ abstract class ViewComponent(override var token: Token, override var receiveStat
     /**
      * It is called when the component is standalone.
      */
-    abstract fun on(state: State)
+    open fun on(state: State) = Unit
 
     /**
      * It is only called when the component is in RecyclerView's row
      */
-    abstract fun on(item: ItemModel, position: Int)
+    open fun on(item: ItemModel, position: Int) = Unit
+
+    /**
+     * It is only called when the component is in CollectionView's row
+     */
+    open fun on(content: SectionContent, position: Int) = Unit
 }
 
 /**
