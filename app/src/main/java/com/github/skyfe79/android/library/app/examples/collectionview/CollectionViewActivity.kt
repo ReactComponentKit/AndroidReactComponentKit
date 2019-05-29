@@ -1,21 +1,14 @@
 package com.github.skyfe79.android.library.app.examples.collectionview
 
-import android.annotation.SuppressLint
 import android.graphics.Point
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.*
 import com.github.skyfe79.android.library.app.R
 import com.github.skyfe79.android.library.app.examples.collectionview.action.LoadAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.components.EmojiViewComponent
-import com.github.skyfe79.android.library.app.examples.emojicollection.models.EmojiBoxModel
-import com.github.skyfe79.android.library.app.examples.emojicollection.util.EmojiHelper
 import com.github.skyfe79.android.library.app.examples.recyclerview.component.SectionViewComponent
-import com.github.skyfe79.android.library.app.examples.recyclerview.model.TextMessage
-import com.github.skyfe79.android.reactcomponentkit.collectionmodels.DefaultSectionModel
 import com.github.skyfe79.android.reactcomponentkit.collectionview.CollectionViewAdapter
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.sticky.StickyHeadersLinearLayoutManager
 import com.github.skyfe79.android.reactcomponentkit.rx.AutoDisposeBag
 import com.github.skyfe79.android.reactcomponentkit.rx.disposedBy
@@ -36,7 +29,6 @@ class CollectionViewActivity : AppCompatActivity() {
         adapter
     }
 
-    @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collection_view)
