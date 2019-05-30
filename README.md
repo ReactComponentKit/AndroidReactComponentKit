@@ -32,21 +32,25 @@ AndroidReactComponentKit provides four components basically.
 
 ## Examples
 
-### Counter
+### [Counter](https://github.com/ReactComponentKit/AndroidReactComponentKit/tree/master/app/src/main/java/com/github/skyfe79/android/library/app/examples/counter)
 
  ![](./art/counter.gif)
  
-### RecyclerView with DiffUtil
+### [RecyclerView with DiffUtil](https://github.com/ReactComponentKit/AndroidReactComponentKit/tree/master/app/src/main/java/com/github/skyfe79/android/library/app/examples/emojicollection)
  
  ![](./art/emoji-diffutil.gif)
  
-### CollectionViewAdapter
+### [CollectionViewAdapter](https://github.com/ReactComponentKit/AndroidReactComponentKit/tree/master/app/src/main/java/com/github/skyfe79/android/library/app/examples/collectionview)
 
  ![](./art/collectionviewadapter.gif)
-
+ 
 ## Setup Gradle
 
 ```
+dependencies {
+	...
+	implementation 'com.github.skyfe79.android:reactcomponentkit:0.0.1'
+}
 ```
 
 ## MIT License

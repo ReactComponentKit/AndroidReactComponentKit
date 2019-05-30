@@ -2,6 +2,25 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: "kotlin-kapt"
+apply plugin: 'com.novoda.bintray-release'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.9.1'
+    }
+}
+
+publish {
+    userOrg = 'skyfe79'
+    groupId = 'com.github.skyfe79.android'
+    artifactId = 'reactcomponentkit'
+    publishVersion = '0.0.1'
+    desc = 'AndroidReactComponentKit = Component + MVVM + Redux for Android!!!'
+    website = 'https://github.com/ReactComponentKit/AndroidReactComponentKit'
+}
 
 android {
     compileSdkVersion 28
@@ -25,6 +44,11 @@ android {
     }
 
 }
+
+tasks.withType(Javadoc).all {
+    enabled = false
+}
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
