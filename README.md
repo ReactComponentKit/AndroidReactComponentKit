@@ -1,11 +1,53 @@
-# AndroidReactComponentKot
+# AndroidReactComponentKit
 
 [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
 
-ReactComponentKit for Android 
+AndroidReactComponentKit is ReactComponentKit for Android. AndroidReactComponentKit is a library for building Activity or Fragment. You can make that based on Components. Also, It uses MVVM and Redux architectures for unidirectional data flow.
 
+<div align="center"><img src="https://raw.githubusercontent.com/ReactComponentKit/AndroidReactComponentKit/master/art/AndroidReactComponentKit.png"></div>
+
+## Data Flow
+
+ * (1) : Components dispatch actions
+ * (2) : ViewModel passes the actions to the store. You can use beforeDispatch(action:) method to do some work before dispatching actions.
+ * (3) : Store passes current state to the Redux pipeline. Middlewares, Reducers and Postwares make a new state.
+ * (4) : New State comes out from the Redux pipeline. It is passed to the store.
+ * (5) : Store passes the new state to the ViewModel.
+ * (6) : ViewModel passes or propagates the new state to the Components.
+
+## Components
+
+AndroidReactComponentKit provides four components basically. 
+
+ * ViewComponent
+  * ViewComponent is a view. It is an abstraction of the view that makes up the screen as a component. You can use ViewComponent to create a layout of the Activity or Fragment. It can also be used to create an item views in RecyclerView.
+ * FragmentComponent
+  * FragmentComponet is a fragment. You can use FragmentComponent when creating an Activity. If you delegate responsibility for an Activity to a FragmentComponent, you can avoid creating a massive Activity.
+ * RecyclerViewAdapter
+  * The RecyclerViewAdapter connects ViewComponent and RecyclerView. The RecyclerViewAdapter can use several types of views, but only one LayoutManager can be used.
+ * CollectionViewAdapter
+  * The CollectionViewAdapter connects ViewComponent and RecyclerView. Unlike the RecyclerViewAdapter, you can use multiple LayoutManagers. In other words, you can use various LayoutManagers with different types of views.  
+
+## Examples
+
+### Counter
+
+ ![](./art/counter.gif)
+ 
+### RecyclerView with DiffUtil
+ 
+ ![](./art/emoji-diffutil.gif)
+ 
+### CollectionViewAdapter
+
+ ![](./art/collectionviewadapter.gif)
+
+## Setup Gradle
+
+```
+```
 
 ## MIT License
 

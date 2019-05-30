@@ -1,8 +1,5 @@
 package com.github.skyfe79.android.library.app
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.OnLifecycleEvent
-import com.github.skyfe79.android.library.app.action.ResetRouteAction
 import com.github.skyfe79.android.reactcomponentkit.redux.Output
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
