@@ -4,7 +4,7 @@
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
 
-AndroidReactComponentKit is ReactComponentKit for Android. AndroidReactComponentKit is a library for building Activity or Fragment. You can make that based on Components. Also, It uses MVVM and Redux architectures for unidirectional data flow.
+AndroidReactComponentKit is [ReactComponentKit](https://github.com/ReactComponentKit/ReactComponentKit) for Android. AndroidReactComponentKit is a library for building Activity or Fragment. You can make that based on Components. Also, It uses MVVM and Redux architectures for unidirectional data flow.
 
 <div align="center"><img src="https://raw.githubusercontent.com/ReactComponentKit/AndroidReactComponentKit/master/art/AndroidReactComponentKit.png"></div>
 
