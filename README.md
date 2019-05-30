@@ -32,6 +32,10 @@ AndroidReactComponentKit provides four components basically.
 
 ## Examples
 
+### [Hello Android RCK](https://github.com/ReactComponentKit/HelloAndroidRCK)
+
+ ![](https://raw.githubusercontent.com/ReactComponentKit/HelloAndroidRCK/master/art/result.gif)
+
 ### [Counter](https://github.com/ReactComponentKit/AndroidReactComponentKit/tree/master/app/src/main/java/com/github/skyfe79/android/library/app/examples/counter)
 
  ![](./art/counter.gif)
@@ -46,10 +50,27 @@ AndroidReactComponentKit provides four components basically.
  
 ## Setup Gradle
 
+### Project's build.gradle
+
+```groovy
+ext.kotlin_version = '1.3.31'
+ext.anko_version='0.10.8'
+ext.androidx_lifecycle_version='2.0.0'
+ext.rxjava2_version='2.2.8'
+ext.rxkotlin_version='2.3.0'
+ext.rck_version='0.0.1'
 ```
+
+### App's build.gradle
+
+```groovy
 dependencies {
 	...
-	implementation 'com.github.skyfe79.android:reactcomponentkit:0.0.1'
+	implementation "io.reactivex.rxjava2:rxjava:$rxjava2_version"
+	implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+	implementation "org.jetbrains.anko:anko:$anko_version"
+	implementation "androidx.lifecycle:lifecycle-extensions:$androidx_lifecycle_version"
+	implementation "com.github.skyfe79.android:reactcomponentkit:$rck_version"
 }
 ```
 
