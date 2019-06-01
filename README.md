@@ -36,7 +36,7 @@ AndroidReactComponentKit provides four components basically.
 
  ![](https://raw.githubusercontent.com/ReactComponentKit/HelloAndroidRCK/master/art/result.gif)
 
-### [Counter](https://github.com/ReactComponentKit/AndroidReactComponentKit/tree/master/app/src/main/java/com/github/skyfe79/android/library/app/examples/counter)
+### [Counter](https://github.com/ReactComponentKit/AndroidReactComponentKit/tree/master/app/src/main/java/com/github/skyfe79/android/library/app/examples/counter2)
 
  ![](./art/counter.gif)
  
