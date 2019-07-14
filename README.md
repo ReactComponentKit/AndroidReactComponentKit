@@ -62,7 +62,7 @@ ext.anko_version='0.10.8'
 ext.androidx_lifecycle_version='2.0.0'
 ext.rxjava2_version='2.2.8'
 ext.rxkotlin_version='2.3.0'
-ext.rck_version='0.0.1'
+ext.rck_version='1.0.2'
 ```
 
 ### App's build.gradle
