@@ -14,12 +14,19 @@ import org.jetbrains.anko.AnkoContext
 /**
  * Use this component for Activity Root Layout
  */
-abstract class LayoutComponent<in T>(override var token: Token, override var receiveState: Boolean) : AnkoComponent<T>, ReactComponent {
+abstract class LayoutComponent<in T> : AnkoComponent<T>, ReactComponent {
 
-    override var newStateEventBus: EventBus<ComponentNewStateEvent>? = if (receiveState) EventBus(token) else null
-    override var dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
+    override var token: Token
+    override var receiveState: Boolean
+    override var newStateEventBus: EventBus<ComponentNewStateEvent>?
+    override var dispatchEventBus: EventBus<ComponentDispatchEvent>
 
-    init {
+    constructor(token: Token, receiveState: Boolean) {
+        this.token = token
+        this.receiveState = receiveState
+        this.newStateEventBus = if (receiveState) EventBus(token) else null
+        this.dispatchEventBus = EventBus(token)
+
         newStateEventBus?.let {
             it.on { event ->
                 when (event) {

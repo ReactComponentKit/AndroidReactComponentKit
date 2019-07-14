@@ -10,8 +10,8 @@ import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.include
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class MainViewLayout(override var token: Token, override var receiveState: Boolean = false)
-    : LayoutComponent<MainActivity>(token, receiveState) {
+class MainViewLayout(token: Token)
+    : LayoutComponent<MainActivity>(token, false) {
 
     /**
      * You can use layout xml file like below.
