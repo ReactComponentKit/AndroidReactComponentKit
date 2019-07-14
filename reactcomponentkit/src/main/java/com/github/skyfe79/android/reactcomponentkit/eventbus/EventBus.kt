@@ -65,12 +65,6 @@ class EventBus<T: EventType>(val token: Token? = null) {
         eventHandler = event
     }
 
-    private fun handle(event: T) {
-        eventHandler?.let { handle ->
-            handle(event)
-        }
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     internal fun processNotification(notification: Notification) {
         if (!isAlive) return
@@ -80,24 +74,26 @@ class EventBus<T: EventType>(val token: Token? = null) {
 
         val userInfo = notification.userInfo
         val token = userInfo["token"] as? Token
-        val event = userInfo["event"] as? T
+        val event = userInfo["event"] as? T ?: return
 
-        event?.let { e ->
-            if (token != null) {
-                if (token == this@EventBus.token) {
-                    try {
-                        handle(e)
-                    } catch (_: Exception) {
-                        //ignore it
-                    }
-                }
-            } else {
-                // broadcast if token is null
+        if (token != null) {
+            if (token == this@EventBus.token) {
                 try {
-                    handle(e)
+                    eventHandler?.let {
+                        it(event)
+                    }
                 } catch (_: Exception) {
                     //ignore it
                 }
+            }
+        } else {
+            // broadcast if token is null
+            try {
+                eventHandler?.let {
+                    it(event)
+                }
+            } catch (_: Exception) {
+                //ignore it
             }
         }
     }

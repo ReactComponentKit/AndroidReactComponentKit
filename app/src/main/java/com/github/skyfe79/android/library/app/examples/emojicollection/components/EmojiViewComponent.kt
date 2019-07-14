@@ -17,7 +17,7 @@ import org.jetbrains.anko.sdk27.coroutines.onClick
 
 data class ClickEmojiAction(val emoji: String): Action
 
-class EmojiViewComponent(override var token: Token, override var receiveState: Boolean): ViewComponent(token, receiveState) {
+class EmojiViewComponent(token: Token, receiveState: Boolean): ViewComponent(token, receiveState) {
     private lateinit var emojiTextView: TextView
 
     override fun layout(ui: AnkoContext<Context>): View = with(ui) {
@@ -33,6 +33,7 @@ class EmojiViewComponent(override var token: Token, override var receiveState: B
         }
 
         rootLayout.onClick {
+            this@EmojiViewComponent.token
             dispatch(ClickEmojiAction(emojiTextView.text.toString()))
         }
 

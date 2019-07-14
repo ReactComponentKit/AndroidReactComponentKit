@@ -18,12 +18,19 @@ import org.jetbrains.anko.custom.ankoView
 import kotlin.reflect.KClass
 
 
-abstract class ViewComponent(override var token: Token, override var receiveState: Boolean = true): AnkoComponent<Context>, ReactComponent {
+abstract class ViewComponent: AnkoComponent<Context>, ReactComponent {
 
-    override var newStateEventBus: EventBus<ComponentNewStateEvent>? = if (receiveState) EventBus(token) else null
-    override var dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
+    override var token: Token
+    override var receiveState: Boolean
+    override var newStateEventBus: EventBus<ComponentNewStateEvent>?
+    override var dispatchEventBus: EventBus<ComponentDispatchEvent>
 
-    init {
+    constructor(token: Token, receiveState: Boolean = true) {
+        this.token = token
+        this.receiveState = receiveState
+        this.newStateEventBus = if (receiveState) EventBus(token) else null
+        this.dispatchEventBus = EventBus(token)
+
         newStateEventBus?.let {
             it.on { event ->
                 when (event) {
@@ -32,6 +39,8 @@ abstract class ViewComponent(override var token: Token, override var receiveStat
             }
         }
     }
+
+
 
     private var cachedView: View? = null
     override fun createView(ui: AnkoContext<Context>): View {
