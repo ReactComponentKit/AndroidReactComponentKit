@@ -77,7 +77,7 @@ abstract class FragmentComponent: Fragment(), ReactComponent {
 
     internal fun stopEventBus() {
         newStateEventBus?.stop()
-        dispatchEventBus.start()
+        dispatchEventBus.stop()
     }
 }
 
