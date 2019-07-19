@@ -23,9 +23,14 @@ abstract class AndroidViewModelType<S: State>(application: Application): Android
     }
 
     override fun onCleared() {
+        clear()
+        super.onCleared()
+    }
+
+
+    fun clear() {
         disposables.dispose()
         store.deinitialize()
-        super.onCleared()
     }
 
     private fun setupRxStream() {

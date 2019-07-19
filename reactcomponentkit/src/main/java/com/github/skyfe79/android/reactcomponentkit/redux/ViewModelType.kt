@@ -22,9 +22,14 @@ abstract class ViewModelType<S: State>: ViewModel() {
     }
 
     override fun onCleared() {
+        clear()
+        super.onCleared()
+    }
+
+
+    fun clear() {
         disposables.dispose()
         store.deinitialize()
-        super.onCleared()
     }
 
     private fun setupRxStream() {
