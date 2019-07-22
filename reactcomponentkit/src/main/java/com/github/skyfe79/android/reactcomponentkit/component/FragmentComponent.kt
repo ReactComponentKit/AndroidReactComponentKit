@@ -128,3 +128,11 @@ fun FragmentActivity.removeFragment(component: FragmentComponent) {
         .remove(component)
         .commit()
 }
+
+fun FragmentActivity.removeAllFragments() {
+    this.supportFragmentManager
+        .fragments
+        .map { it as? FragmentComponent }
+        .filterNotNull()
+        .forEach { removeFragment(it) }
+}
