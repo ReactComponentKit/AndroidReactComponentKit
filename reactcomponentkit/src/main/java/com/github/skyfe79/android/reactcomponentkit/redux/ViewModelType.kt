@@ -87,7 +87,11 @@ abstract class ViewModelType<S: State>: ViewModel() {
     }
 
     fun nextDispatch(action: Action, applyNewState: Boolean = false) {
-        actionQueue.enqueue(Pair(action, applyNewState))
+        if (actionQueue.isEmpty) {
+            rx_action.accept(action)
+        } else {
+            actionQueue.enqueue(Pair(action, applyNewState))
+        }
     }
 
     open fun beforeDispatch(action: Action): Action = action
