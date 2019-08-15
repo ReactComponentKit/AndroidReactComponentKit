@@ -22,12 +22,12 @@ abstract class ViewModelType<S: State>: ViewModel() {
     }
 
     override fun onCleared() {
-        clear()
+        dispose()
         super.onCleared()
     }
 
 
-    fun clear() {
+    fun dispose() {
         disposables.dispose()
         store.deinitialize()
     }
