@@ -77,9 +77,21 @@ abstract class AndroidViewModelType<S: State>(application: Application): Android
             .observeOn(AndroidSchedulers.mainThread())
             .doAfterNext {
                 isProcessingAction.set(false)
+
+                val actionItem = actionQueue.peek()
+                if (actionItem != null ) {
+                    val (nextAction, _) = actionItem
+                    rx_action.accept(nextAction)
+                    // deque actions after processing
+                    actionQueue.dequeue()
+                }
             }
             .doOnError {
                 isProcessingAction.set(false)
+                val actionItem = actionQueue.peek()
+                if (actionItem != null ) {
+                    actionQueue.dequeue()
+                }
             }
             .subscribe { newState ->
                 if (newState == null) return@subscribe
@@ -91,14 +103,11 @@ abstract class AndroidViewModelType<S: State>(application: Application): Android
                 } else {
                     val actionItem = actionQueue.peek()
                     if (actionItem != null) {
-                        val (nextAction, apply) = actionItem
+                        val (_, apply) = actionItem
                         if (apply) {
                             on(newState)
                             store.doAfters()
                         }
-                        rx_action.accept(nextAction)
-                        // deque actions after processing
-                        actionQueue.dequeue()
                     } else {
                         on(newState)
                         store.doAfters()

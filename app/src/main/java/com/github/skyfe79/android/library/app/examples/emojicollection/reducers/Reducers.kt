@@ -17,7 +17,7 @@ import kotlin.random.Random
 
 fun asyncAPI(): Single<Int> {
     return Single.create {
-        Thread.sleep(500L)
+        Thread.sleep(0L)
         it.onSuccess(1)
     }
 }
