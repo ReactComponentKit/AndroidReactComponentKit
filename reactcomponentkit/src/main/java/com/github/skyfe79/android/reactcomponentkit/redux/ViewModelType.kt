@@ -1,9 +1,11 @@
 package com.github.skyfe79.android.reactcomponentkit.redux
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import java.util.concurrent.atomic.AtomicBoolean
 
 abstract class ViewModelType<S: State>: ViewModel() {
 
@@ -11,10 +13,11 @@ abstract class ViewModelType<S: State>: ViewModel() {
     private val rx_state: BehaviorRelay<S?> = BehaviorRelay.create()
 
     val store = Store<S>()
-    val disposables = CompositeDisposable()
+    private val disposables = CompositeDisposable()
     private var nextAction: Action? = null
     private var applyNewState: Boolean = false
     private var actionQueue: Queue<Pair<Action, Boolean>> = Queue()
+    private var isProcessingAction: AtomicBoolean = AtomicBoolean(false)
 
     init {
         setupRxStream()
@@ -34,11 +37,27 @@ abstract class ViewModelType<S: State>: ViewModel() {
 
     private fun setupRxStream() {
         val disposable1 = rx_action
+            .doOnNext {
+                isProcessingAction.set(true)
+            }
             .filter { action ->
-                action !is VoidAction
+                if (action !is VoidAction) {
+                    true
+                } else {
+                    isProcessingAction.set(false)
+                    false
+                }
             }
             .map { action ->
                 beforeDispatch(action)
+            }
+            .filter { action ->
+                if (action !is VoidAction) {
+                    true
+                } else {
+                    isProcessingAction.set(false)
+                    false
+                }
             }
             .flatMap { action ->
                 store.dispatch(action).toObservable()
@@ -54,22 +73,34 @@ abstract class ViewModelType<S: State>: ViewModel() {
         disposables.add(disposable1)
 
         val disposable2 = rx_state
+            .observeOn(AndroidSchedulers.mainThread())
+            .doAfterNext {
+                isProcessingAction.set(false)
+            }
+            .doOnError {
+                isProcessingAction.set(false)
+            }
             .subscribe { newState ->
                 if (newState == null) return@subscribe
                 if (newState.error != null) {
                     newState.error?.let {
                         on(it)
+                        store.doAfters()
                     }
                 } else {
-                    val actionItem = actionQueue.dequeue()
+                    val actionItem = actionQueue.peek()
                     if (actionItem != null) {
                         val (nextAction, apply) = actionItem
                         if (apply) {
                             on(newState)
+                            store.doAfters()
                         }
                         rx_action.accept(nextAction)
+                        // deque actions after processing
+                        actionQueue.dequeue()
                     } else {
                         on(newState)
+                        store.doAfters()
                     }
                 }
             }
@@ -79,18 +110,34 @@ abstract class ViewModelType<S: State>: ViewModel() {
     abstract fun setupStore()
 
     fun dispatch(action: Action) {
-        if (actionQueue.isEmpty) {
-            rx_action.accept(action)
+        if (actionQueue.isNotEmpty) {
+            if (isProcessingAction.get()) {
+                actionQueue.enqueue(Pair(action, true))
+            } else {
+                rx_action.accept(action)
+            }
         } else {
-            actionQueue.enqueue(Pair(action, true))
+            if (isProcessingAction.get()) {
+                actionQueue.enqueue(Pair(action, true))
+            } else {
+                rx_action.accept(action)
+            }
         }
     }
 
     fun nextDispatch(action: Action, applyNewState: Boolean = false) {
-        if (actionQueue.isEmpty) {
-            rx_action.accept(action)
+        if (actionQueue.isNotEmpty) {
+            if (isProcessingAction.get()) {
+                actionQueue.enqueue(Pair(action, applyNewState))
+            } else {
+                rx_action.accept(action)
+            }
         } else {
-            actionQueue.enqueue(Pair(action, applyNewState))
+            if (isProcessingAction.get()) {
+                actionQueue.enqueue(Pair(action, applyNewState))
+            } else {
+                rx_action.accept(action)
+            }
         }
     }
 

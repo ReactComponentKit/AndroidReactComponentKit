@@ -3,6 +3,7 @@ package com.github.skyfe79.android.library.app.examples.emojicollection.postware
 import com.github.skyfe79.android.library.app.examples.emojicollection.EmojiCollectionState
 import com.github.skyfe79.android.library.app.examples.emojicollection.EmojiCollectionViewModel
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.AddEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.actions.MakeItemModelsAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.RemoveEmojiAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.ShuffleEmojiAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.models.EmojiBoxModel
@@ -14,7 +15,7 @@ fun EmojiCollectionViewModel.makeItemModels(state: State, action: Action): Obser
     val emojiCollectionState = (state as? EmojiCollectionState) ?: return Observable.just(state)
 
     return when (action) {
-        is AddEmojiAction, RemoveEmojiAction, ShuffleEmojiAction -> {
+        is MakeItemModelsAction -> {
             val emojiBoxModels = emojiCollectionState.emojis.map { EmojiBoxModel(it) }
             val mutatedState = emojiCollectionState.copy(itemModels = emojiBoxModels)
             Observable.just(mutatedState)

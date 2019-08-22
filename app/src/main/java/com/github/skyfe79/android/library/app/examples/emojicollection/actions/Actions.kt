@@ -5,3 +5,4 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 data class AddEmojiAction(val emoji: String): Action
 object RemoveEmojiAction: Action
 object ShuffleEmojiAction: Action
+object MakeItemModelsAction: Action
