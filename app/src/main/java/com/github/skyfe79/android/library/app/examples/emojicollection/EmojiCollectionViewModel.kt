@@ -1,6 +1,5 @@
 package com.github.skyfe79.android.library.app.examples.emojicollection
 
-import com.github.skyfe79.android.library.app.examples.emojicollection.middlewares.reset
 import com.github.skyfe79.android.library.app.examples.emojicollection.middlewares.route
 import com.github.skyfe79.android.library.app.examples.emojicollection.postwares.*
 import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.addEmoji
@@ -30,7 +29,7 @@ class EmojiCollectionViewModel: RootViewModelType<EmojiCollectionState>() {
     override fun setupStore() {
         store.set(
             initialState = EmojiCollectionState(listOf(), listOf()),
-            middlewares = arrayOf(::reset, ::route),
+            middlewares = arrayOf(::route),
             reducers = arrayOf(::addEmoji, ::removeEmoji, ::shuffleEmoji),
             postwares = arrayOf(::makeItemModels)
         )
@@ -38,6 +37,6 @@ class EmojiCollectionViewModel: RootViewModelType<EmojiCollectionState>() {
 
     override fun on(newState: EmojiCollectionState) {
         itemModels.accept(newState.itemModels)
-        routes.accept(newState.route)
+        routes.accept(newState.route).afterReset(EmojiRoute.None)
     }
 }

@@ -9,18 +9,25 @@ class Output<T>(defaultValue: T?) {
     val value: T?
         get() = behaviorRelay.value
 
-    fun accept(value: T) {
-        val currentValue = behaviorRelay.value
-        if (currentValue != value) {
+    fun accept(value: T, withoutCompare: Boolean = false): ResetChanin {
+        if (withoutCompare) {
             behaviorRelay.accept(value)
+        } else {
+            val currentValue = behaviorRelay.value
+            if (currentValue != value) {
+                behaviorRelay.accept(value)
+            }
         }
-    }
-
-    fun acceptWithoutCompare(value: T) {
-        behaviorRelay.accept(value)
+        return ResetChanin()
     }
 
     fun asObservable(): Observable<T> {
         return behaviorRelay
+    }
+
+    inner class ResetChanin {
+        fun afterReset(value: T) {
+            accept(value, withoutCompare = true)
+        }
     }
 }

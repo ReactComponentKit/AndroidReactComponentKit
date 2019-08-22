@@ -4,7 +4,6 @@ package com.github.skyfe79.android.library.app
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.github.skyfe79.android.library.app.action.ResetRouteAction
 import com.github.skyfe79.android.library.app.examples.collectionview.CollectionViewActivity
 import com.github.skyfe79.android.library.app.examples.counter.CounterActivity
 import com.github.skyfe79.android.library.app.examples.counter.CounterActivity2
@@ -38,11 +37,6 @@ class MainActivity : AppCompatActivity() {
                 handleRoute(it)
             }
             .disposedBy(disposeBag)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewModel.dispatch(ResetRouteAction)
     }
 
     private fun handleRoute(route: MainRoute) = when (route) {

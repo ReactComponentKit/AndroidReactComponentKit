@@ -4,10 +4,10 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
-import kotlin.reflect.KFunction
 
 class Store<S: State> {
 
@@ -16,21 +16,47 @@ class Store<S: State> {
     private lateinit var middlewares: Array<Middleware>
     private lateinit var reducers: Array<Reducer>
     private lateinit var postwares: Array<Postware>
+    private lateinit var afters: Array<After<S>>
     private val disposables = CompositeDisposable()
+
+    companion object {
+        init {
+            RxJavaPlugins.setErrorHandler {
+            }
+        }
+    }
 
     fun set(
         initialState: S,
         middlewares: Array<Middleware> = emptyArray(),
         reducers: Array<Reducer> = emptyArray(),
-        postwares: Array<Postware> = emptyArray()) {
+        postwares: Array<Postware> = emptyArray(),
+        afters: Array<After<S>> = emptyArray()) {
         this.state = initialState
         this.middlewares = middlewares
         this.reducers = reducers
         this.postwares = postwares
+        this.afters = afters
     }
 
     fun deinitialize() {
+        middlewares = emptyArray()
+        reducers = emptyArray()
+        postwares = emptyArray()
+        afters = emptyArray()
+        disposables.clear()
+    }
 
+    /**
+     * Do something after dispatching new state.
+     * For example, reset route on Android
+     */
+    internal fun doAfters() {
+        var mutatedState = state
+        afters.forEach {
+            mutatedState = it(mutatedState)
+        }
+        state = mutatedState
     }
 
     @Suppress("UNCHECKED_CAST")

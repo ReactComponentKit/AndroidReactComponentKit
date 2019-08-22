@@ -4,7 +4,6 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Output
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
 import com.github.skyfe79.android.library.app.redux.routeReducer
-import com.github.skyfe79.android.library.app.redux.reset
 
 enum class MainRoute {
     None,
@@ -23,13 +22,11 @@ class MainViewModel: RootViewModelType<MainState>() {
     override fun setupStore() {
         store.set(
             initialState = MainState(MainRoute.None),
-            middlewares = arrayOf(::reset),
-            reducers = arrayOf(::routeReducer),
-            postwares = arrayOf()
+            reducers = arrayOf(::routeReducer)
         )
     }
 
     override fun on(newState: MainState) {
-        route.acceptWithoutCompare(newState.route)
+        route.accept(newState.route).afterReset(MainRoute.None)
     }
 }

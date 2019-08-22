@@ -17,7 +17,7 @@ publish {
     userOrg = 'skyfe79'
     groupId = 'com.github.skyfe79.android'
     artifactId = 'reactcomponentkit'
-    publishVersion = '1.1.7'
+    publishVersion = '1.2.7'
     desc = 'AndroidReactComponentKit = Component + MVVM + Redux for Android!!!'
     website = 'https://github.com/ReactComponentKit/AndroidReactComponentKit'
 }
@@ -29,8 +29,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.1.7"
+        versionCode 9
+        versionName "1.2.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,10 +52,10 @@ tasks.withType(Javadoc).all {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
@@ -67,5 +67,5 @@ dependencies {
 
     implementation "org.jetbrains.anko:anko:$anko_version"
 
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha05'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta03'
 }
