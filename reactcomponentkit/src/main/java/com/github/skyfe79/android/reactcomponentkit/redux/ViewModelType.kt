@@ -1,6 +1,5 @@
 package com.github.skyfe79.android.reactcomponentkit.redux
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,7 +19,7 @@ abstract class ViewModelType<S: State>: ViewModel() {
 
     init {
         setupRxStream()
-        setupStore()
+        this.setupStore()
     }
 
     override fun onCleared() {
@@ -62,9 +61,6 @@ abstract class ViewModelType<S: State>: ViewModel() {
                 store.dispatch(action).toObservable()
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .map { state ->
-                state as? S
-            }
             .subscribe { newState ->
                 rx_state.accept(newState)
             }

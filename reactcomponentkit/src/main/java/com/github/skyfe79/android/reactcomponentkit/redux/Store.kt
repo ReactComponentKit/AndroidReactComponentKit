@@ -13,9 +13,7 @@ class Store<S: State> {
 
     lateinit var state: S
         private set
-//    private lateinit var middlewares: Array<Middleware<S>>
     private lateinit var reducers: Array<Reducer<S>>
-//    private lateinit var postwares: Array<Postware<S>>
     private lateinit var afters: Array<After<S>>
     private val disposables = CompositeDisposable()
 
@@ -28,21 +26,15 @@ class Store<S: State> {
 
     fun set(
         initialState: S,
-//        middlewares: Array<Middleware<S>> = emptyArray(),
         reducers: Array<Reducer<S>> = emptyArray(),
-//        postwares: Array<Postware<S>> = emptyArray(),
         afters: Array<After<S>> = emptyArray()) {
         this.state = initialState
-//        this.middlewares = middlewares
         this.reducers = reducers
-//        this.postwares = postwares
         this.afters = afters
     }
 
     fun deinitialize() {
-//        middlewares = emptyArray()
         reducers = emptyArray()
-//        postwares = emptyArray()
         afters = emptyArray()
         disposables.clear()
     }
