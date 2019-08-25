@@ -8,20 +8,16 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import io.reactivex.Observable
 
-fun countReducer(state: State, action: Action): Observable<State> {
-    val counterState = (state as? CounterState) ?: return Observable.just(state)
-
+fun countReducer(state: CounterState, action: Action): CounterState {
     return when(action) {
         is IncreaseAction -> {
-            val mutatedState = counterState.copy(count = counterState.count + action.payload)
-            Observable.just(mutatedState)
+            val mutatedState = state.copy(count = state.count + action.payload)
+            mutatedState
         }
         is DecreaseAction -> {
-            val mutatedState = counterState.copy(count = counterState.count - action.payload)
-            Observable.just(mutatedState)
+            val mutatedState = state.copy(count = state.count - action.payload)
+            mutatedState
         }
-        else -> {
-            Observable.just(state)
-        }
+        else -> state
     }
 }

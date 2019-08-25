@@ -2,15 +2,11 @@ package com.github.skyfe79.android.reactcomponentkit.recyclerview
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.github.skyfe79.android.reactcomponentkit.R
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.collectionview.SectionContent
 import com.github.skyfe79.android.reactcomponentkit.component.ViewComponent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
-import kotlinx.android.synthetic.main.rck_nested_collection_view_component.view.*
 import org.jetbrains.anko.AnkoContext
-import kotlin.reflect.KClass
 
 
 internal class RecyclerViewCell(private val token: Token, private val receiveState: Boolean = false) {
@@ -42,8 +38,8 @@ internal class RecyclerViewCell(private val token: Token, private val receiveSta
     }
 
     inner class CollectionViewHolder(cellView: View): CollectionViewCellViewHolder(cellView) {
-        override fun onBind(content: SectionContent, position: Int) {
-            configure(content, position)
+        override fun onBind(contents: SectionContent, position: Int) {
+            configure(contents, position)
         }
     }
 }

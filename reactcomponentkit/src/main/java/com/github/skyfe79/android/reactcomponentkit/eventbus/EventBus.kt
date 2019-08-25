@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.skyfe79.android.reactcomponentkit.eventbus
 
 import org.greenrobot.eventbus.Subscribe
@@ -69,7 +71,7 @@ class EventBus<T: EventType>(val token: Token? = null) {
     internal fun processNotification(notification: Notification) {
         if (!isAlive) return
 
-        val sender = notification.sender as? EventBus<T>
+        val sender = notification.sender as? EventBus<*>
         if (sender == null || sender === this) return
 
         val userInfo = notification.userInfo

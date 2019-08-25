@@ -13,9 +13,9 @@ class Store<S: State> {
 
     lateinit var state: S
         private set
-    private lateinit var middlewares: Array<Middleware>
-    private lateinit var reducers: Array<Reducer>
-    private lateinit var postwares: Array<Postware>
+    private lateinit var middlewares: Array<Middleware<S>>
+    private lateinit var reducers: Array<Reducer<S>>
+    private lateinit var postwares: Array<Postware<S>>
     private lateinit var afters: Array<After<S>>
     private val disposables = CompositeDisposable()
 
@@ -28,9 +28,9 @@ class Store<S: State> {
 
     fun set(
         initialState: S,
-        middlewares: Array<Middleware> = emptyArray(),
-        reducers: Array<Reducer> = emptyArray(),
-        postwares: Array<Postware> = emptyArray(),
+        middlewares: Array<Middleware<S>> = emptyArray(),
+        reducers: Array<Reducer<S>> = emptyArray(),
+        postwares: Array<Postware<S>> = emptyArray(),
         afters: Array<After<S>> = emptyArray()) {
         this.state = initialState
         this.middlewares = middlewares
@@ -59,8 +59,7 @@ class Store<S: State> {
         state = mutatedState
     }
 
-    @Suppress("UNCHECKED_CAST")
-    fun dispatch(action: Action): Single<State> {
+    fun dispatch(action: Action): Single<S> {
         return Single.create { single ->
 
             // reset error
@@ -78,9 +77,7 @@ class Store<S: State> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                     onNext = { newState ->
-                        (newState as? S)?.let {
-                            this@Store.state = it
-                        }
+                        this@Store.state = newState
                         single.onSuccess(this@Store.state)
                     },
                     onError = { error ->
@@ -92,27 +89,24 @@ class Store<S: State> {
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun middleware(state: State, action: Action): Observable<State> {
+    private fun middleware(state: S, action: Action): Observable<S> {
         if (middlewares.isEmpty()) return Observable.just(state)
 
-        return Single.create<State> { single ->
+        return Single.create<S> { single ->
             val disposable = middlewares.toObservable()
                 .subscribeOn(Schedulers.single())
                 .observeOn(Schedulers.single())
-                .flatMap { m ->
+                .map { m ->
                     m(this@Store.state, action)
                 }
                 .doOnNext { modifiedState ->
-                    (modifiedState as? S)?.let {
-                        this@Store.state = it
-                    }
+                    this@Store.state = modifiedState
                 }
-                .reduce { _: State, nextState: State ->
+                .reduce { _: S, nextState: S ->
                     nextState
                 }
                 .subscribeBy(
-                    onSuccess = { finalState: State ->
+                    onSuccess = { finalState: S ->
                         single.onSuccess(finalState)
                     },
                     onError = { error ->
@@ -124,24 +118,21 @@ class Store<S: State> {
         }.toObservable()
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun reduce(state: State, action: Action): Observable<State> {
+    private fun reduce(state: S, action: Action): Observable<S> {
         if (reducers.isEmpty()) return Observable.just(state)
         if (state.error != null) return Observable.just(state)
 
-        return Single.create<State> { single ->
+        return Single.create<S> { single ->
             val disposable = reducers.toObservable()
                 .subscribeOn(Schedulers.single())
                 .observeOn(Schedulers.single())
-                .flatMap { r ->
+                .map { r ->
                     r(this@Store.state, action)
                 }
                 .doOnNext { modifiedState ->
-                    (modifiedState as? S)?.let {
-                        this@Store.state = it
-                    }
+                    this@Store.state = modifiedState
                 }
-                .reduce { _: State, nextState: State ->
+                .reduce { _: S, nextState: S ->
                     nextState
                 }
                 .subscribeBy(
@@ -157,24 +148,21 @@ class Store<S: State> {
         }.toObservable()
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun postware(state: State, action: Action): Observable<State> {
+    private fun postware(state: S, action: Action): Observable<S> {
         if (postwares.isEmpty()) return Observable.just(state)
         if (state.error != null) return Observable.just(state)
 
-        return Single.create<State> { single ->
+        return Single.create<S> { single ->
             val disposable = postwares.toObservable()
                 .subscribeOn(Schedulers.single())
                 .observeOn(Schedulers.single())
-                .flatMap { p ->
+                .map { p ->
                     p(this@Store.state, action)
                 }
                 .doOnNext { modifiedState ->
-                    (modifiedState as? S)?.let {
-                        this@Store.state = it
-                    }
+                    this@Store.state = modifiedState
                 }
-                .reduce { _: State, nextState: State ->
+                .reduce { _: S, nextState: S ->
                     nextState
                 }
                 .subscribeBy(

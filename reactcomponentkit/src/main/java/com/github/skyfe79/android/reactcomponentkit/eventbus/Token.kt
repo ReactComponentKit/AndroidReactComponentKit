@@ -6,7 +6,7 @@ import java.util.*
 
 data class Token(val token: String = UUID.randomUUID().toString()) : Parcelable {
     constructor(source: Parcel) : this(
-        source.readString()
+        source.readString() ?: UUID.randomUUID().toString()
     )
 
     override fun describeContents() = 0

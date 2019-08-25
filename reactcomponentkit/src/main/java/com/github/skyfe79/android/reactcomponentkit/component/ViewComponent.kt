@@ -77,7 +77,7 @@ abstract class ViewComponent: AnkoComponent<Context>, ReactComponent {
  *  component(MyViewComponent(...))
  * }
  */
-inline fun ViewManager.component(component: ViewComponent, theme: Int = 0): View {
+fun ViewManager.component(component: ViewComponent, theme: Int = 0): View {
     return component(component, theme) {}
 }
 

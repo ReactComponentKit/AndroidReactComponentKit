@@ -11,15 +11,13 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import io.reactivex.Observable
 
-fun EmojiCollectionViewModel.makeItemModels(state: State, action: Action): Observable<State> {
-    val emojiCollectionState = (state as? EmojiCollectionState) ?: return Observable.just(state)
-
+fun EmojiCollectionViewModel.makeItemModels(state: EmojiCollectionState, action: Action): EmojiCollectionState {
     return when (action) {
         is MakeItemModelsAction -> {
-            val emojiBoxModels = emojiCollectionState.emojis.map { EmojiBoxModel(it) }
-            val mutatedState = emojiCollectionState.copy(itemModels = emojiBoxModels)
-            Observable.just(mutatedState)
+            val emojiBoxModels = state.emojis.map { EmojiBoxModel(it) }
+            val mutatedState = state.copy(itemModels = emojiBoxModels)
+            mutatedState
         }
-        else -> Observable.just(state)
+        else -> state
     }
 }

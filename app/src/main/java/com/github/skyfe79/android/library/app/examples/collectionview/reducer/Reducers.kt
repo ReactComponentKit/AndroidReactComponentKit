@@ -8,17 +8,15 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import io.reactivex.Observable
 
-fun CollectionViewModel.loadEmoji(state: State, action: Action): Observable<State> {
-    val collectionState = (state as? CollectionState) ?: return Observable.just(state)
-
+fun CollectionViewModel.loadEmoji(state: CollectionState, action: Action): CollectionState {
     return when (action) {
         is LoadAction -> {
             val emojiCollection = (1..5)
                 .map {
                     (1..(40..80).random()).map { EmojiHelper.emoji }
                 }
-            Observable.just(collectionState.copy(emojis = emojiCollection))
+            state.copy(emojis = emojiCollection)
         }
-        else -> Observable.just(state)
+        else -> state
     }
 }

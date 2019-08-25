@@ -8,30 +8,28 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import io.reactivex.Observable
 
-fun MainViewModel.routeReducer(state: State, action: Action): Observable<State> {
-    val mainState = (state as? MainState) ?: return Observable.just(state)
-
+fun MainViewModel.routeReducer(state: MainState, action: Action): MainState {
     return when (action) {
         is ClickCounterExampleButtonAction -> {
-            val mutatedState = mainState.copy(route = MainRoute.CounterExample)
-            Observable.just(mutatedState)
+            val mutatedState = state.copy(route = MainRoute.CounterExample)
+            mutatedState
         }
         is ClickCounterExample2ButtonAction -> {
-            val mutatedState = mainState.copy(route = MainRoute.CounterExample2)
-            Observable.just(mutatedState)
+            val mutatedState = state.copy(route = MainRoute.CounterExample2)
+            mutatedState
         }
         is ClickRecyclerViewExampleButtonAction -> {
-            val mutatedState = mainState.copy(route = MainRoute.RecyclerViewExample)
-            Observable.just(mutatedState)
+            val mutatedState = state.copy(route = MainRoute.RecyclerViewExample)
+            mutatedState
         }
         is ClickEmojiExampleButtonAction -> {
-            val mutatedState = mainState.copy(route = MainRoute.EmojiCollectionExample)
-            Observable.just(mutatedState)
+            val mutatedState = state.copy(route = MainRoute.EmojiCollectionExample)
+            mutatedState
         }
         is ClickCollectionViewExampleButtonAction -> {
-            val mutatedState = mainState.copy(route = MainRoute.CollectionViewExample)
-            Observable.just(mutatedState)
+            val mutatedState = state.copy(route = MainRoute.CollectionViewExample)
+            mutatedState
         }
-        else -> Observable.just(state)
+        else -> state
     }
 }

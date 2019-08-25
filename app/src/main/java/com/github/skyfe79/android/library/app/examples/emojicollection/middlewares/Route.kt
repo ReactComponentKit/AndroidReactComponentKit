@@ -8,11 +8,9 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import io.reactivex.Observable
 
-fun EmojiCollectionViewModel.route(state: State, action: Action): Observable<State> {
-    val emojiCollectionState = (state as? EmojiCollectionState) ?: return Observable.just(state)
-
+fun EmojiCollectionViewModel.route(state: EmojiCollectionState, action: Action): EmojiCollectionState {
     return when(action) {
-        is ClickEmojiAction -> Observable.just(emojiCollectionState.copy(route = EmojiRoute.AlertEmoji(action.emoji)))
-        else -> Observable.just(emojiCollectionState.copy(route = EmojiRoute.None))
+        is ClickEmojiAction -> state.copy(route = EmojiRoute.AlertEmoji(action.emoji))
+        else -> state.copy(route = EmojiRoute.None)
     }
 }

@@ -11,9 +11,7 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import io.reactivex.Observable
 
-fun CollectionViewModel.makeSectionModels(state: State, action: Action): Observable<State> {
-    val collectionState = (state as? CollectionState) ?: return Observable.just(state)
-
+fun CollectionViewModel.makeSectionModels(state: CollectionState, action: Action): CollectionState {
     return when (action) {
         is LoadAction -> {
 
@@ -25,7 +23,7 @@ fun CollectionViewModel.makeSectionModels(state: State, action: Action): Observa
                 0xff58c8d8.toInt()
             )
 
-            val sectionModels = collectionState.emojis.mapIndexed { index, list ->
+            val sectionModels = state.emojis.mapIndexed { index, list ->
                 val emojiBoxModels = list.map { EmojiBoxModel(it) }
                 DefaultSectionModel(
                     emojiBoxModels,
@@ -46,8 +44,8 @@ fun CollectionViewModel.makeSectionModels(state: State, action: Action): Observa
                     }
                 }
             }
-           Observable.just(collectionState.copy(sections = sectionModels))
+           state.copy(sections = sectionModels)
         }
-        else -> Observable.just(state)
+        else -> state
     }
 }
