@@ -11,10 +11,12 @@ class CounterViewModel: RootViewModelType<CounterState>() {
     val count: Output<Int> = Output(0)
 
     override fun setupStore() {
-        store.set(
-            initialState = CounterState(0),
-            reducers = arrayOf(::countReducer)
-        )
+        initStore { store ->
+            store.set(
+                initialState = CounterState(0),
+                reducers = arrayOf(::countReducer)
+            )
+        }
     }
 
     override fun on(newState: CounterState) {

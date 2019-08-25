@@ -20,10 +20,12 @@ class MainViewModel: RootViewModelType<MainState>() {
     val route: Output<MainRoute> = Output(MainRoute.None)
 
     override fun setupStore() {
-        store.set(
-            initialState = MainState(MainRoute.None),
-            reducers = arrayOf(::routeReducer)
-        )
+        initStore { store ->
+            store.set(
+                initialState = MainState(MainRoute.None),
+                reducers = arrayOf(::routeReducer)
+            )
+        }
     }
 
     override fun on(newState: MainState) {

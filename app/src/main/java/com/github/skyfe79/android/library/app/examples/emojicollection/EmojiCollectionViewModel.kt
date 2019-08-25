@@ -25,10 +25,12 @@ class EmojiCollectionViewModel: RootViewModelType<EmojiCollectionState>() {
     val routes = Output<EmojiRoute>(EmojiRoute.None)
 
     override fun setupStore() {
-        store.set(
-            initialState = EmojiCollectionState(listOf(), listOf()),
-            reducers = arrayOf(::route, ::addEmoji, ::removeEmoji, ::shuffleEmoji, ::makeItemModels)
-        )
+        initStore { store ->
+            store.set(
+                initialState = EmojiCollectionState(listOf(), listOf()),
+                reducers = arrayOf(::route, ::addEmoji, ::removeEmoji, ::shuffleEmoji, ::makeItemModels)
+            )
+        }
     }
 
     override fun on(newState: EmojiCollectionState) {

@@ -5,17 +5,20 @@ import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.locks.ReentrantLock
 
 abstract class ViewModelType<S: State>: ViewModel() {
 
     private val rx_action: BehaviorRelay<Action> = BehaviorRelay.createDefault(VoidAction)
     private val rx_state: BehaviorRelay<S?> = BehaviorRelay.create()
 
-    val store = Store<S>()
+    private val store = Store<S>()
     private val disposables = CompositeDisposable()
     private var applyNewState: Boolean = false
     private var actionQueue: Queue<Pair<Action, Boolean>> = Queue()
     private var isProcessingAction: AtomicBoolean = AtomicBoolean(false)
+    private val writeLock = ReentrantLock()
+    private val readLock = ReentrantLock()
 
     init {
         setupRxStream()
@@ -149,4 +152,30 @@ abstract class ViewModelType<S: State>: ViewModel() {
     open fun on(error: Error) = Unit
 
     abstract fun on(newState: S)
+
+    fun initStore(block: ViewModelType<S>.(Store<S>) -> Unit) {
+        block(this.store)
+    }
+
+    fun setState(block: ViewModelType<S>.(S) -> S): S {
+        writeLock.lock()
+        try {
+            val newState = block(this.store.state)
+            this.on(newState)
+            return newState
+        } finally {
+            writeLock.unlock()
+        }
+    }
+
+    fun withState(block: ViewModelType<S>.(S) -> Unit) {
+        readLock.lock()
+        try {
+            block(this.store.state)
+        } finally {
+            readLock.unlock()
+        }
+    }
+
+
 }
