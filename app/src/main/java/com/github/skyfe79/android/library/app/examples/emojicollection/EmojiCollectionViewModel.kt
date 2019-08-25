@@ -1,5 +1,6 @@
 package com.github.skyfe79.android.library.app.examples.emojicollection
 
+import android.app.Application
 import android.util.Log
 import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.*
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
@@ -19,7 +20,7 @@ data class EmojiCollectionState(
     val route: EmojiRoute = EmojiRoute.None
 ): State()
 
-class EmojiCollectionViewModel: RootViewModelType<EmojiCollectionState>() {
+class EmojiCollectionViewModel(application: Application): RootViewModelType<EmojiCollectionState>(application) {
 
     val itemModels = Output<List<ItemModel>>(listOf())
     val routes = Output<EmojiRoute>(EmojiRoute.None)

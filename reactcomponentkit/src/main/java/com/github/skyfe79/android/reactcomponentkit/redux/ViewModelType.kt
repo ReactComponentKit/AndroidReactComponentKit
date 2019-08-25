@@ -1,13 +1,14 @@
 package com.github.skyfe79.android.reactcomponentkit.redux
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantLock
 
-abstract class ViewModelType<S: State>: ViewModel() {
+abstract class ViewModelType<S: State>(application: Application): AndroidViewModel(application) {
 
     private val rx_action: BehaviorRelay<Action> = BehaviorRelay.createDefault(VoidAction)
     private val rx_state: BehaviorRelay<S?> = BehaviorRelay.create()

@@ -6,9 +6,6 @@ import com.github.skyfe79.android.library.app.examples.counter.CounterViewModel2
 import com.github.skyfe79.android.library.app.examples.counter.action.DecreaseAction
 import com.github.skyfe79.android.library.app.examples.counter.action.IncreaseAction
 import com.github.skyfe79.android.reactcomponentkit.redux.Action
-import com.github.skyfe79.android.reactcomponentkit.redux.State
-import com.github.skyfe79.android.reactcomponentkit.util.async
-import io.reactivex.Observable
 
 
 //목표는 리듀서와 액션을 없애는 것이다.

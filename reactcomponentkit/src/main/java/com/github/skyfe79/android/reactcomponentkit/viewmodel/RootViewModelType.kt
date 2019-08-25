@@ -1,5 +1,6 @@
 package com.github.skyfe79.android.reactcomponentkit.viewmodel
 
+import android.app.Application
 import com.github.skyfe79.android.reactcomponentkit.ComponentDispatchEvent
 import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.EventBus
@@ -7,7 +8,7 @@ import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.reactcomponentkit.redux.ViewModelType
 
-abstract class RootViewModelType<S: State>: ViewModelType<S>() {
+abstract class RootViewModelType<S: State>(application: Application): ViewModelType<S>(application) {
     val token: Token = Token()
     private val newStateEventBus: EventBus<ComponentNewStateEvent> = EventBus(token)
     private val dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
@@ -26,7 +27,7 @@ abstract class RootViewModelType<S: State>: ViewModelType<S>() {
         val someState = state as? S
         if (previousState != someState) {
             someState?.let {
-                newStateEventBus.post(ComponentNewStateEvent.On(state))
+                newStateEventBus.post(ComponentNewStateEvent.On(it))
             }
         }
         previousState = someState
