@@ -1,11 +1,9 @@
 package com.github.skyfe79.android.library.app.examples.emojicollection
 
-import com.github.skyfe79.android.library.app.examples.emojicollection.middlewares.route
-import com.github.skyfe79.android.library.app.examples.emojicollection.postwares.*
-import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.addEmoji
-import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.removeEmoji
-import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.shuffleEmoji
+import android.util.Log
+import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.*
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
+import com.github.skyfe79.android.reactcomponentkit.redux.Error
 import com.github.skyfe79.android.reactcomponentkit.redux.Output
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
@@ -29,14 +27,16 @@ class EmojiCollectionViewModel: RootViewModelType<EmojiCollectionState>() {
     override fun setupStore() {
         store.set(
             initialState = EmojiCollectionState(listOf(), listOf()),
-            middlewares = arrayOf(::route),
-            reducers = arrayOf(::addEmoji, ::removeEmoji, ::shuffleEmoji),
-            postwares = arrayOf(::makeItemModels)
+            reducers = arrayOf(::route, ::addEmoji, ::removeEmoji, ::shuffleEmoji, ::makeItemModels)
         )
     }
 
     override fun on(newState: EmojiCollectionState) {
         itemModels.accept(newState.itemModels)
         routes.accept(newState.route).afterReset(EmojiRoute.None)
+    }
+
+    override fun on(error: Error) {
+        Log.d("ERROR", "$error")
     }
 }

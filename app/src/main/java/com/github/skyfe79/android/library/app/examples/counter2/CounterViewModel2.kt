@@ -11,9 +11,7 @@ class CounterViewModel2: RootViewModelType<CounterState>() {
     override fun setupStore() {
         store.set(
             initialState = CounterState(0),
-            middlewares = arrayOf(),
-            reducers = arrayOf(::countReducer),
-            postwares = arrayOf()
+            reducers = arrayOf(::countReducer)
         )
     }
 

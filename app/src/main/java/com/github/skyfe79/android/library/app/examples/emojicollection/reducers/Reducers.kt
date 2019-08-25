@@ -2,10 +2,13 @@ package com.github.skyfe79.android.library.app.examples.emojicollection.reducers
 
 import com.github.skyfe79.android.library.app.examples.emojicollection.EmojiCollectionState
 import com.github.skyfe79.android.library.app.examples.emojicollection.EmojiCollectionViewModel
+import com.github.skyfe79.android.library.app.examples.emojicollection.EmojiRoute
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.AddEmojiAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.MakeItemModelsAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.RemoveEmojiAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.ShuffleEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.components.ClickEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.models.EmojiBoxModel
 import com.github.skyfe79.android.library.app.examples.emojicollection.util.EmojiHelper
 import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
@@ -14,6 +17,13 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
 import java.lang.Exception
 import kotlin.random.Random
+
+fun EmojiCollectionViewModel.route(state: EmojiCollectionState, action: Action): EmojiCollectionState {
+    return when(action) {
+        is ClickEmojiAction -> state.copy(route = EmojiRoute.AlertEmoji(action.emoji))
+        else -> state.copy(route = EmojiRoute.None)
+    }
+}
 
 fun EmojiCollectionViewModel.addEmoji(state: EmojiCollectionState, action: Action): EmojiCollectionState {
     return when (action) {
@@ -40,8 +50,7 @@ fun EmojiCollectionViewModel.removeEmoji(state: EmojiCollectionState, action: Ac
                 nextDispatch(MakeItemModelsAction, applyNewState = true)
                 mutatedState
             } catch (e: Exception) {
-                // ignore
-                state
+                throw  e
             }
         }
         else -> state
@@ -55,6 +64,17 @@ fun EmojiCollectionViewModel.shuffleEmoji(state: EmojiCollectionState, action: A
             mutableEmojiList.shuffle()
             val mutatedState = state.copy(emojis = mutableEmojiList)
             nextDispatch(MakeItemModelsAction, applyNewState = true)
+            mutatedState
+        }
+        else -> state
+    }
+}
+
+fun EmojiCollectionViewModel.makeItemModels(state: EmojiCollectionState, action: Action): EmojiCollectionState {
+    return when (action) {
+        is MakeItemModelsAction -> {
+            val emojiBoxModels = state.emojis.map { EmojiBoxModel(it) }
+            val mutatedState = state.copy(itemModels = emojiBoxModels)
             mutatedState
         }
         else -> state

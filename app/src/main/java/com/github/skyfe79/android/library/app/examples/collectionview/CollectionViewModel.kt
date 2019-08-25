@@ -2,7 +2,7 @@ package com.github.skyfe79.android.library.app.examples.collectionview
 
 import android.app.Application
 import com.github.skyfe79.android.library.app.examples.collectionview.action.LoadAction
-import com.github.skyfe79.android.library.app.examples.collectionview.postwares.makeSectionModels
+import com.github.skyfe79.android.library.app.examples.collectionview.reducer.makeSectionModels
 import com.github.skyfe79.android.library.app.examples.collectionview.reducer.loadEmoji
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.DefaultSectionModel
 import com.github.skyfe79.android.reactcomponentkit.redux.Action
@@ -26,8 +26,7 @@ class CollectionViewModel(application: Application): RootAndroidViewModelType<Co
     override fun setupStore() {
         store.set(
             initialState = CollectionState(),
-            reducers = arrayOf(::loadEmoji),
-            postwares = arrayOf(::makeSectionModels)
+            reducers = arrayOf(::loadEmoji, ::makeSectionModels)
         )
     }
 

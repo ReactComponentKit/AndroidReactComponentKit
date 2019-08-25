@@ -13,9 +13,9 @@ class Store<S: State> {
 
     lateinit var state: S
         private set
-    private lateinit var middlewares: Array<Middleware<S>>
+//    private lateinit var middlewares: Array<Middleware<S>>
     private lateinit var reducers: Array<Reducer<S>>
-    private lateinit var postwares: Array<Postware<S>>
+//    private lateinit var postwares: Array<Postware<S>>
     private lateinit var afters: Array<After<S>>
     private val disposables = CompositeDisposable()
 
@@ -28,21 +28,21 @@ class Store<S: State> {
 
     fun set(
         initialState: S,
-        middlewares: Array<Middleware<S>> = emptyArray(),
+//        middlewares: Array<Middleware<S>> = emptyArray(),
         reducers: Array<Reducer<S>> = emptyArray(),
-        postwares: Array<Postware<S>> = emptyArray(),
+//        postwares: Array<Postware<S>> = emptyArray(),
         afters: Array<After<S>> = emptyArray()) {
         this.state = initialState
-        this.middlewares = middlewares
+//        this.middlewares = middlewares
         this.reducers = reducers
-        this.postwares = postwares
+//        this.postwares = postwares
         this.afters = afters
     }
 
     fun deinitialize() {
-        middlewares = emptyArray()
+//        middlewares = emptyArray()
         reducers = emptyArray()
-        postwares = emptyArray()
+//        postwares = emptyArray()
         afters = emptyArray()
         disposables.clear()
     }
@@ -58,6 +58,39 @@ class Store<S: State> {
         }
         state = mutatedState
     }
+
+    fun dispatch(action: Action): Single<S> {
+        return Single.create { single ->
+            // reset error
+            this@Store.state.error = null
+
+            val disposable = reducers.toObservable()
+                .subscribeOn(Schedulers.single())
+                .observeOn(Schedulers.single())
+                .map { reducer ->
+                    reducer(this@Store.state, action)
+                }
+                .doOnNext { modifiedState ->
+                    this@Store.state = modifiedState
+                }
+                .reduce { _: S, nextState: S ->
+                    nextState
+                }
+                .subscribeBy(
+                    onSuccess = { finalState: S ->
+                        single.onSuccess(finalState)
+                    },
+                    onError = { error ->
+                        this@Store.state.error = Error(error, action)
+                        single.onSuccess(this@Store.state)
+                    }
+                )
+
+            disposables.add(disposable)
+        }
+    }
+
+    /*
 
     fun dispatch(action: Action): Single<S> {
         return Single.create { single ->
@@ -89,92 +122,96 @@ class Store<S: State> {
         }
     }
 
-    private fun middleware(state: S, action: Action): Observable<S> {
-        if (middlewares.isEmpty()) return Observable.just(state)
 
-        return Single.create<S> { single ->
-            val disposable = middlewares.toObservable()
-                .subscribeOn(Schedulers.single())
-                .observeOn(Schedulers.single())
-                .map { m ->
-                    m(this@Store.state, action)
-                }
-                .doOnNext { modifiedState ->
-                    this@Store.state = modifiedState
-                }
-                .reduce { _: S, nextState: S ->
-                    nextState
-                }
-                .subscribeBy(
-                    onSuccess = { finalState: S ->
-                        single.onSuccess(finalState)
-                    },
-                    onError = { error ->
-                        this@Store.state.error = Error(error, action)
-                        single.onSuccess(this@Store.state)
-                    }
-                )
-            disposables.add(disposable)
-        }.toObservable()
-    }
 
-    private fun reduce(state: S, action: Action): Observable<S> {
-        if (reducers.isEmpty()) return Observable.just(state)
-        if (state.error != null) return Observable.just(state)
+private fun middleware(state: S, action: Action): Observable<S> {
+    if (middlewares.isEmpty()) return Observable.just(state)
 
-        return Single.create<S> { single ->
-            val disposable = reducers.toObservable()
-                .subscribeOn(Schedulers.single())
-                .observeOn(Schedulers.single())
-                .map { r ->
-                    r(this@Store.state, action)
+    return Single.create<S> { single ->
+        val disposable = middlewares.toObservable()
+            .subscribeOn(Schedulers.single())
+            .observeOn(Schedulers.single())
+            .map { m ->
+                m(this@Store.state, action)
+            }
+            .doOnNext { modifiedState ->
+                this@Store.state = modifiedState
+            }
+            .reduce { _: S, nextState: S ->
+                nextState
+            }
+            .subscribeBy(
+                onSuccess = { finalState: S ->
+                    single.onSuccess(finalState)
+                },
+                onError = { error ->
+                    this@Store.state.error = Error(error, action)
+                    single.onSuccess(this@Store.state)
                 }
-                .doOnNext { modifiedState ->
-                    this@Store.state = modifiedState
-                }
-                .reduce { _: S, nextState: S ->
-                    nextState
-                }
-                .subscribeBy(
-                    onSuccess = { finalState ->
-                        single.onSuccess(finalState)
-                    },
-                    onError = { error ->
-                        this@Store.state.error = Error(error, action)
-                        single.onSuccess(this@Store.state)
-                    }
-                )
-            disposables.add(disposable)
-        }.toObservable()
-    }
+            )
+        disposables.add(disposable)
+    }.toObservable()
+}
 
-    private fun postware(state: S, action: Action): Observable<S> {
-        if (postwares.isEmpty()) return Observable.just(state)
-        if (state.error != null) return Observable.just(state)
+private fun reduce(state: S, action: Action): Observable<S> {
+    if (reducers.isEmpty()) return Observable.just(state)
+    if (state.error != null) return Observable.just(state)
 
-        return Single.create<S> { single ->
-            val disposable = postwares.toObservable()
-                .subscribeOn(Schedulers.single())
-                .observeOn(Schedulers.single())
-                .map { p ->
-                    p(this@Store.state, action)
+    return Single.create<S> { single ->
+        val disposable = reducers.toObservable()
+            .subscribeOn(Schedulers.single())
+            .observeOn(Schedulers.single())
+            .map { r ->
+                r(this@Store.state, action)
+            }
+            .doOnNext { modifiedState ->
+                this@Store.state = modifiedState
+            }
+            .reduce { _: S, nextState: S ->
+                nextState
+            }
+            .subscribeBy(
+                onSuccess = { finalState ->
+                    single.onSuccess(finalState)
+                },
+                onError = { error ->
+                    this@Store.state.error = Error(error, action)
+                    single.onSuccess(this@Store.state)
                 }
-                .doOnNext { modifiedState ->
-                    this@Store.state = modifiedState
+            )
+        disposables.add(disposable)
+    }.toObservable()
+}
+
+private fun postware(state: S, action: Action): Observable<S> {
+    if (postwares.isEmpty()) return Observable.just(state)
+    if (state.error != null) return Observable.just(state)
+
+    return Single.create<S> { single ->
+        val disposable = postwares.toObservable()
+            .subscribeOn(Schedulers.single())
+            .observeOn(Schedulers.single())
+            .map { p ->
+                p(this@Store.state, action)
+            }
+            .doOnNext { modifiedState ->
+                this@Store.state = modifiedState
+            }
+            .reduce { _: S, nextState: S ->
+                nextState
+            }
+            .subscribeBy(
+                onSuccess = { finalState ->
+                    single.onSuccess(finalState)
+                },
+                onError = { error ->
+                    this@Store.state.error = Error(error, action)
+                    single.onSuccess(this@Store.state)
                 }
-                .reduce { _: S, nextState: S ->
-                    nextState
-                }
-                .subscribeBy(
-                    onSuccess = { finalState ->
-                        single.onSuccess(finalState)
-                    },
-                    onError = { error ->
-                        this@Store.state.error = Error(error, action)
-                        single.onSuccess(this@Store.state)
-                    }
-                )
-            disposables.add(disposable)
-        }.toObservable()
-    }
+            )
+        disposables.add(disposable)
+    }.toObservable()
+}
+
+ */
 }
