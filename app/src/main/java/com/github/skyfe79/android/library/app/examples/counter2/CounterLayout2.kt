@@ -13,7 +13,7 @@ import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class CounterLayout2(token: Token, receiveState: Boolean): LayoutComponent<CounterActivity2>(token, receiveState) {
+class CounterLayout2(token: Token): LayoutComponent<CounterActivity2>(token) {
 
     private enum class IDs {
         TextView

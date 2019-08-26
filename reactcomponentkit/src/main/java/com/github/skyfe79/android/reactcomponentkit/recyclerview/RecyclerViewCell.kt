@@ -9,7 +9,7 @@ import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import org.jetbrains.anko.AnkoContext
 
 
-internal class RecyclerViewCell(private val token: Token, private val receiveState: Boolean = false) {
+internal class RecyclerViewCell(private val token: Token) {
 
     lateinit var viewComponent: ViewComponent
 

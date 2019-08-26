@@ -6,8 +6,8 @@ import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.redux.Error
 import com.github.skyfe79.android.reactcomponentkit.redux.Output
+import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
 import com.github.skyfe79.android.reactcomponentkit.redux.State
-import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
 
 sealed class EmojiRoute {
     object None: EmojiRoute()
@@ -20,7 +20,7 @@ data class EmojiCollectionState(
     val route: EmojiRoute = EmojiRoute.None
 ): State()
 
-class EmojiCollectionViewModel(application: Application): RootViewModelType<EmojiCollectionState>(application) {
+class EmojiCollectionViewModel(application: Application): RCKViewModel<EmojiCollectionState>(application) {
 
     val itemModels = Output<List<ItemModel>>(listOf())
     val routes = Output<EmojiRoute>(EmojiRoute.None)

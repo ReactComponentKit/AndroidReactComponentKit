@@ -9,7 +9,9 @@ import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.EventBus
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
 import com.github.skyfe79.android.reactcomponentkit.redux.State
+import java.lang.ref.WeakReference
 
 internal enum class FragmentComponentState {
     SHOW,
@@ -20,19 +22,16 @@ internal enum class FragmentComponentState {
 abstract class FragmentComponent: Fragment(), ReactComponent {
 
     companion object {
-        inline fun <reified T: FragmentComponent> newInstance(token: Token, receiveState: Boolean): T {
+        inline fun <reified T: FragmentComponent> newInstance(token: Token): T {
             val args = Bundle()
             args.putParcelable("token", token)
-            args.putBoolean("receiveState", receiveState)
             val component = T::class.java.newInstance()
             component.arguments = args
             return component
         }
     }
+
     override var token: Token = Token.empty
-    override var receiveState: Boolean = false
-    override var newStateEventBus: EventBus<ComponentNewStateEvent>? = null
-    override var dispatchEventBus: EventBus<ComponentDispatchEvent> = EventBus(token)
     internal var state: FragmentComponentState = FragmentComponentState.NONE
 
     override fun onAttach(context: Context) {
@@ -40,49 +39,16 @@ abstract class FragmentComponent: Fragment(), ReactComponent {
 
         if (arguments != null) {
             arguments?.let {
-                this@FragmentComponent.receiveState = it.getBoolean("receiveState", false)
                 this@FragmentComponent.token = (it.getParcelable("token") as? Token) ?: Token.empty
             }
         }
-
-        newStateEventBus = if (receiveState) EventBus(token) else null
-        dispatchEventBus = EventBus(token)
-
-        newStateEventBus?.let {
-            it.on { event ->
-                when (event) {
-                    is ComponentNewStateEvent.On -> on(event.state)
-                }
-            }
-        }
-
-        if (state == FragmentComponentState.SHOW) {
-            startEventBus()
-        } else {
-            stopEventBus()
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        stopEventBus()
     }
 
     abstract fun on(state: State)
-
-    internal fun startEventBus() {
-        newStateEventBus?.start()
-        dispatchEventBus.start()
-    }
-
-    internal fun stopEventBus() {
-        newStateEventBus?.stop()
-        dispatchEventBus.stop()
-    }
 }
 
-inline fun <reified T: FragmentComponent> FragmentActivity.fragmentComponent(token: Token, receiveState: Boolean = true): T {
-    return FragmentComponent.newInstance(token, receiveState)
+inline fun <reified T: FragmentComponent> FragmentActivity.fragmentComponent(token: Token): T {
+    return FragmentComponent.newInstance(token)
 }
 
 fun FragmentActivity.replaceFragment(component: FragmentComponent, containerViewId: Int, tag: String? = null) {
@@ -103,7 +69,6 @@ fun FragmentActivity.addFragment(component: FragmentComponent, containerViewId: 
 
 fun FragmentActivity.hideFragment(component: FragmentComponent) {
     component.state = FragmentComponentState.HIDE
-    component.stopEventBus()
 
     this.supportFragmentManager
         .beginTransaction()
@@ -113,7 +78,6 @@ fun FragmentActivity.hideFragment(component: FragmentComponent) {
 
 fun FragmentActivity.showFragment(component: FragmentComponent) {
     component.state = FragmentComponentState.SHOW
-    component.startEventBus()
 
     this.supportFragmentManager
         .beginTransaction()

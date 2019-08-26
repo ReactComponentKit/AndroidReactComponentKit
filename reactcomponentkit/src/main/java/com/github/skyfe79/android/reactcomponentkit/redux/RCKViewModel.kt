@@ -2,16 +2,20 @@ package com.github.skyfe79.android.reactcomponentkit.redux
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import com.github.skyfe79.android.reactcomponentkit.RCK
+import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantLock
 
-abstract class ViewModelType<S: State>(application: Application): AndroidViewModel(application) {
+abstract class RCKViewModel<S: State>(application: Application): AndroidViewModel(application) {
+    val token: Token = Token()
 
     private val rx_action: BehaviorRelay<Action> = BehaviorRelay.createDefault(VoidAction)
     private val rx_state: BehaviorRelay<S?> = BehaviorRelay.create()
+
 
     private val store = Store<S>()
     private val disposables = CompositeDisposable()
@@ -33,6 +37,7 @@ abstract class ViewModelType<S: State>(application: Application): AndroidViewMod
 
 
     fun dispose() {
+        RCK.unregisterViewModel<S>(token)
         disposables.dispose()
         store.deinitialize()
     }
@@ -154,11 +159,12 @@ abstract class ViewModelType<S: State>(application: Application): AndroidViewMod
 
     abstract fun on(newState: S)
 
-    fun initStore(block: ViewModelType<S>.(Store<S>) -> Unit) {
+    fun initStore(block: RCKViewModel<S>.(Store<S>) -> Unit) {
+        RCK.registerViewModel(token, this)
         block(this.store)
     }
 
-    fun setState(block: ViewModelType<S>.(S) -> S): S {
+    fun setState(block: RCKViewModel<S>.(S) -> S): S {
         writeLock.lock()
         try {
             val newState = block(this.store.state)
@@ -169,7 +175,7 @@ abstract class ViewModelType<S: State>(application: Application): AndroidViewMod
         }
     }
 
-    fun withState(block: ViewModelType<S>.(S) -> Unit) {
+    fun withState(block: RCKViewModel<S>.(S) -> Unit) {
         readLock.lock()
         try {
             block(this.store.state)

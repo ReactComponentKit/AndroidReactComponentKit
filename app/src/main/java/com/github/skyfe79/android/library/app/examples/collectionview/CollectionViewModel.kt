@@ -4,11 +4,7 @@ import android.app.Application
 import com.github.skyfe79.android.library.app.examples.collectionview.action.LoadAction
 import com.github.skyfe79.android.library.app.examples.collectionview.reducer.*
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.DefaultSectionModel
-import com.github.skyfe79.android.reactcomponentkit.redux.Action
-import com.github.skyfe79.android.reactcomponentkit.redux.Output
-import com.github.skyfe79.android.reactcomponentkit.redux.State
-import com.github.skyfe79.android.reactcomponentkit.redux.VoidAction
-import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
+import com.github.skyfe79.android.reactcomponentkit.redux.*
 
 
 data class CollectionState(
@@ -18,7 +14,7 @@ data class CollectionState(
 
 
 
-class CollectionViewModel(application: Application): RootViewModelType<CollectionState>(application) {
+class CollectionViewModel(application: Application): RCKViewModel<CollectionState>(application) {
 
     val sections: Output<List<DefaultSectionModel>> = Output(emptyList())
 

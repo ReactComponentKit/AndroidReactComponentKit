@@ -1,6 +1,5 @@
 package com.github.skyfe79.android.reactcomponentkit
 
-import com.github.skyfe79.android.reactcomponentkit.eventbus.EventBus
 import com.github.skyfe79.android.reactcomponentkit.eventbus.EventType
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.Action
@@ -16,11 +15,8 @@ sealed class ComponentDispatchEvent: EventType {
 
 interface ReactComponent {
     var token: Token
-    var receiveState: Boolean
-    var newStateEventBus: EventBus<ComponentNewStateEvent>?
-    var dispatchEventBus: EventBus<ComponentDispatchEvent>
 
     fun dispatch(action: Action) {
-        dispatchEventBus.post(ComponentDispatchEvent.Dispatch(action))
+        //dispatchEventBus.post(ComponentDispatchEvent.Dispatch(action))
     }
 }

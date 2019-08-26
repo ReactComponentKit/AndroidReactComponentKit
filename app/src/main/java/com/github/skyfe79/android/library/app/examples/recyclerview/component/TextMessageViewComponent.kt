@@ -17,7 +17,7 @@ import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.*
 import org.jetbrains.anko.coroutines.experimental.bg
 
-class TextMessageViewComponent(override var token: Token, override var receiveState: Boolean): ViewComponent(token, receiveState) {
+class TextMessageViewComponent(token: Token): ViewComponent(token) {
     lateinit var textView: TextView
     lateinit var rootLayout: View
     override fun layout(ui: AnkoContext<Context>): View = with(ui) {
@@ -46,8 +46,8 @@ class TextMessageViewComponent(override var token: Token, override var receiveSt
     }
 }
 
-class SectionViewComponent(override var token: Token, override var receiveState: Boolean): ViewComponent(token, receiveState) {
-    private var textMessageViewComponent = TextMessageViewComponent(token, receiveState)
+class SectionViewComponent(token: Token): ViewComponent(token) {
+    private var textMessageViewComponent = TextMessageViewComponent(token)
 
     override fun layout(ui: AnkoContext<Context>): View = with(ui) {
         verticalLayout {

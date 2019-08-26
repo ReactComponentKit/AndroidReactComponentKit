@@ -8,7 +8,7 @@ import org.jetbrains.anko.setContentView
 class CounterActivity: AppCompatActivity() {
     private lateinit var viewModel: CounterViewModel
     private val layout: CounterLayout by lazy {
-        CounterLayout(viewModel.token, true)
+        CounterLayout(viewModel.token)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -3,8 +3,8 @@ package com.github.skyfe79.android.library.app
 import android.app.Application
 import com.github.skyfe79.android.reactcomponentkit.redux.Output
 import com.github.skyfe79.android.reactcomponentkit.redux.State
-import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
 import com.github.skyfe79.android.library.app.redux.routeReducer
+import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
 
 enum class MainRoute {
     None,
@@ -16,7 +16,7 @@ enum class MainRoute {
 }
 data class MainState(var route: MainRoute): State()
 
-class MainViewModel(application: Application): RootViewModelType<MainState>(application) {
+class MainViewModel(application: Application): RCKViewModel<MainState>(application) {
 
     val route: Output<MainRoute> = Output(MainRoute.None)
 

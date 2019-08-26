@@ -11,7 +11,7 @@ import org.jetbrains.anko.include
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class MainViewLayout(token: Token)
-    : LayoutComponent<MainActivity>(token, false) {
+    : LayoutComponent<MainActivity>(token) {
 
     /**
      * You can use layout xml file like below.

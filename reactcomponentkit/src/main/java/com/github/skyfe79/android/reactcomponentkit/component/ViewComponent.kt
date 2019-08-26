@@ -11,38 +11,23 @@ import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.collectionview.SectionContent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.EventBus
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.custom.ankoView
+import java.lang.ref.WeakReference
 import kotlin.reflect.KClass
 
 
 abstract class ViewComponent: AnkoComponent<Context>, ReactComponent {
-
     override var token: Token
-    override var receiveState: Boolean
-    override var newStateEventBus: EventBus<ComponentNewStateEvent>?
-    override var dispatchEventBus: EventBus<ComponentDispatchEvent>
+    private var cachedView: View? = null
 
-    constructor(token: Token, receiveState: Boolean = true) {
+    constructor(token: Token) {
         this.token = token
-        this.receiveState = receiveState
-        this.newStateEventBus = if (receiveState) EventBus(token) else null
-        this.dispatchEventBus = EventBus(token)
-
-        newStateEventBus?.let {
-            it.on { event ->
-                when (event) {
-                    is ComponentNewStateEvent.On -> on(event.state)
-                }
-            }
-        }
     }
 
-
-
-    private var cachedView: View? = null
     override fun createView(ui: AnkoContext<Context>): View {
         val view = cachedView ?: layout(ui)
         cachedView = view

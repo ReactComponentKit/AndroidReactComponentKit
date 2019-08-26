@@ -36,8 +36,8 @@ open class RecyclerViewAdapter(private val token: Token, private val useDiff: Bo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val cls = viewComponents[viewType] ?: throw IllegalStateException("viewComponent is null")
-        val cell = RecyclerViewCell(token = token, receiveState = false)
-        cell.viewComponent = cls.java.constructors.first().newInstance(token, false) as ViewComponent
+        val cell = RecyclerViewCell(token)
+        cell.viewComponent = cls.java.constructors.first().newInstance(token) as ViewComponent
         return cell.onCreateViewHolder(parent)
     }
 
