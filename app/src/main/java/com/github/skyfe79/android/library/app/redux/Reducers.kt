@@ -8,8 +8,8 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import io.reactivex.Observable
 
-fun MainViewModel.routeReducer(state: MainState, action: Action): MainState {
-    return when (action) {
+fun MainViewModel.routeReducer(action: Action): MainState = setState { state ->
+    when (action) {
         is ClickCounterExampleButtonAction -> {
             val mutatedState = state.copy(route = MainRoute.CounterExample)
             mutatedState

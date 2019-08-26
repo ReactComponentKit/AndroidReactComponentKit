@@ -18,9 +18,9 @@ internal object RCK {
     }
 
     @Suppress("UNCHECKED_CAST")
-    internal fun <S: State> viewModel(token: Token): RCKViewModel<S>? {
+    internal fun viewModel(token: Token): RCKViewModel<*>? {
         val weakViewModel = map[token]
-        return weakViewModel?.get() as? RCKViewModel<S>
+        return weakViewModel?.get() as? RCKViewModel<*>
     }
 
 }

@@ -1,6 +1,7 @@
 package com.github.skyfe79.android.library.app
 
 import android.app.Application
+import android.util.Log
 import com.github.skyfe79.android.reactcomponentkit.redux.Output
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.library.app.redux.routeReducer
@@ -31,5 +32,9 @@ class MainViewModel(application: Application): RCKViewModel<MainState>(applicati
 
     override fun on(newState: MainState) {
         route.accept(newState.route).afterReset(MainRoute.None)
+    }
+
+    fun hello() {
+        Log.d("TAG", "HELLO")
     }
 }

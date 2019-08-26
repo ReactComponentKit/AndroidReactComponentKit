@@ -60,7 +60,7 @@ class Store<S: State> {
                 .subscribeOn(Schedulers.single())
                 .observeOn(Schedulers.single())
                 .map { reducer ->
-                    reducer(this@Store.state, action)
+                    reducer(action)
                 }
                 .doOnNext { modifiedState ->
                     this@Store.state = modifiedState

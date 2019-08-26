@@ -2,6 +2,7 @@ package com.github.skyfe79.android.reactcomponentkit.redux
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class Output<T>(defaultValue: T?) {
     private val behaviorRelay = if (defaultValue != null) BehaviorRelay.createDefault(defaultValue) else BehaviorRelay.create()
@@ -22,7 +23,7 @@ class Output<T>(defaultValue: T?) {
     }
 
     fun asObservable(): Observable<T> {
-        return behaviorRelay
+        return behaviorRelay.observeOn(AndroidSchedulers.mainThread())
     }
 
     inner class ResetChanin {

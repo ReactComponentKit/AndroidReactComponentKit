@@ -18,15 +18,15 @@ import io.reactivex.rxkotlin.subscribeBy
 import java.lang.Exception
 import kotlin.random.Random
 
-fun EmojiCollectionViewModel.route(state: EmojiCollectionState, action: Action): EmojiCollectionState {
-    return when(action) {
+fun EmojiCollectionViewModel.route(action: Action) = setState { state ->
+    when(action) {
         is ClickEmojiAction -> state.copy(route = EmojiRoute.AlertEmoji(action.emoji))
         else -> state.copy(route = EmojiRoute.None)
     }
 }
 
-fun EmojiCollectionViewModel.addEmoji(state: EmojiCollectionState, action: Action): EmojiCollectionState {
-    return when (action) {
+fun EmojiCollectionViewModel.addEmoji(action: Action) = setState { state ->
+    when (action) {
         is AddEmojiAction -> {
             val mutableEmojiList = state.emojis.toMutableList()
             val index = if (mutableEmojiList.isEmpty()) 0 else (0 until mutableEmojiList.size).random()
@@ -39,10 +39,10 @@ fun EmojiCollectionViewModel.addEmoji(state: EmojiCollectionState, action: Actio
 }
 
 
-fun EmojiCollectionViewModel.removeEmoji(state: EmojiCollectionState, action: Action): EmojiCollectionState {
-    return when (action) {
+fun EmojiCollectionViewModel.removeEmoji(action: Action) = setState { state ->
+    when (action) {
         is RemoveEmojiAction -> {
-            return try {
+            try {
                 val mutableEmojiList = state.emojis.toMutableList()
                 val index = if (mutableEmojiList.isEmpty()) 0 else (0 until mutableEmojiList.size).random()
                 mutableEmojiList.removeAt(index)
@@ -57,8 +57,8 @@ fun EmojiCollectionViewModel.removeEmoji(state: EmojiCollectionState, action: Ac
     }
 }
 
-fun EmojiCollectionViewModel.shuffleEmoji(state: EmojiCollectionState, action: Action): EmojiCollectionState {
-    return when (action) {
+fun EmojiCollectionViewModel.shuffleEmoji(action: Action) = setState { state ->
+    when (action) {
         is ShuffleEmojiAction -> {
             val mutableEmojiList = state.emojis.toMutableList()
             mutableEmojiList.shuffle()
@@ -70,8 +70,8 @@ fun EmojiCollectionViewModel.shuffleEmoji(state: EmojiCollectionState, action: A
     }
 }
 
-fun EmojiCollectionViewModel.makeItemModels(state: EmojiCollectionState, action: Action): EmojiCollectionState {
-    return when (action) {
+fun EmojiCollectionViewModel.makeItemModels(action: Action) = setState { state ->
+    when (action) {
         is MakeItemModelsAction -> {
             val emojiBoxModels = state.emojis.map { EmojiBoxModel(it) }
             val mutatedState = state.copy(itemModels = emojiBoxModels)

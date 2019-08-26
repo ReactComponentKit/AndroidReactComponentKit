@@ -3,6 +3,7 @@ package com.github.skyfe79.android.library.app
 import android.view.View
 import com.github.skyfe79.android.library.app.action.*
 import com.github.skyfe79.android.reactcomponentkit.component.LayoutComponent
+import com.github.skyfe79.android.reactcomponentkit.dispatcher.dispatch
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import kotlinx.android.synthetic.main.activity_main.view.*

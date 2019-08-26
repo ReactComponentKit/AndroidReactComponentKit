@@ -3,22 +3,14 @@ package com.github.skyfe79.android.reactcomponentkit.component
 import android.content.Context
 import android.view.View
 import android.view.ViewManager
-import androidx.recyclerview.widget.RecyclerView
-import com.github.skyfe79.android.reactcomponentkit.ComponentDispatchEvent
-import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.collectionview.SectionContent
-import com.github.skyfe79.android.reactcomponentkit.eventbus.EventBus
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
-import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.custom.ankoView
-import java.lang.ref.WeakReference
-import kotlin.reflect.KClass
-
 
 abstract class ViewComponent: AnkoComponent<Context>, ReactComponent {
     override var token: Token

@@ -15,8 +15,8 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import io.reactivex.Observable
 
-fun CollectionViewModel.loadEmoji(state: CollectionState, action: Action): CollectionState {
-    return when (action) {
+fun CollectionViewModel.loadEmoji(action: Action) = setState { state ->
+    when (action) {
         is LoadAction -> {
             val emojiCollection = (1..5)
                 .map {
@@ -28,8 +28,8 @@ fun CollectionViewModel.loadEmoji(state: CollectionState, action: Action): Colle
     }
 }
 
-fun CollectionViewModel.makeSectionModels(state: CollectionState, action: Action): CollectionState {
-    return when (action) {
+fun CollectionViewModel.makeSectionModels(action: Action) = setState { state ->
+    when (action) {
         is LoadAction -> {
 
             val colors = listOf(

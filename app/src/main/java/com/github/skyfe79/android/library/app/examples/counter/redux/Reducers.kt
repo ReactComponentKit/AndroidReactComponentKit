@@ -12,16 +12,16 @@ import com.github.skyfe79.android.reactcomponentkit.redux.Action
 //단 주의할 점은 RCK는 상태 mutation을 모두 백그라운드에서 실행하고 있다.
 //과연 이것이 필요한 것일까?
 //async 만 백그라운드에서 실행하면 되지 않을까?
-fun CounterViewModel.countReducer(state: CounterState, action: Action): CounterState {
-    return when(action) {
+fun CounterViewModel.countReducer(action: Action) = setState { state ->
+    when(action) {
         is IncreaseAction -> increment(action.payload)
         is DecreaseAction -> decrement(action.payload)
         else -> state
     }
 }
 
-fun CounterViewModel2.countReducer(state: CounterState, action: Action): CounterState {
-    return when(action) {
+fun CounterViewModel2.countReducer(action: Action) = setState { state ->
+    when(action) {
         is IncreaseAction -> setState {
             with(it) { copy(count = count + action.payload) }
         }

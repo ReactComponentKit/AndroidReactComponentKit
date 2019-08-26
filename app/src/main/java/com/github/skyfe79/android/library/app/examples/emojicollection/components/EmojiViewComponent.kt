@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.github.skyfe79.android.library.app.examples.emojicollection.models.EmojiProvider
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.component.ViewComponent
+import com.github.skyfe79.android.reactcomponentkit.dispatcher.dispatch
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State

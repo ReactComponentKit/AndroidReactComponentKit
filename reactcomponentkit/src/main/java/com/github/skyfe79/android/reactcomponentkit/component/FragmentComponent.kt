@@ -4,14 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.github.skyfe79.android.reactcomponentkit.ComponentDispatchEvent
-import com.github.skyfe79.android.reactcomponentkit.ComponentNewStateEvent
+import com.github.skyfe79.android.reactcomponentkit.RCK
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
-import com.github.skyfe79.android.reactcomponentkit.eventbus.EventBus
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
-import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
+import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
-import java.lang.ref.WeakReference
 
 internal enum class FragmentComponentState {
     SHOW,
@@ -30,6 +27,8 @@ abstract class FragmentComponent: Fragment(), ReactComponent {
             return component
         }
     }
+
+
 
     override var token: Token = Token.empty
     internal var state: FragmentComponentState = FragmentComponentState.NONE
