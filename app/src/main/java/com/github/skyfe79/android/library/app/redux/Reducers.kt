@@ -33,3 +33,15 @@ fun MainViewModel.routeReducer(action: Action): MainState = setState { state ->
         else -> state
     }
 }
+
+fun MainViewModel.routeClickCounterExampleButtonAction(state: MainState) = state.copy(route = MainRoute.CounterExample)
+
+fun MainViewModel.routeClickCounterExample2ButtonAction(state: MainState) = state.copy(route = MainRoute.CounterExample2)
+
+fun MainViewModel.routeClickRecyclerViewExampleButtonAction(state: MainState) = state.copy(route = MainRoute.RecyclerViewExample)
+
+fun MainViewModel.routeClickEmojiExampleButtonAction(state: MainState) = state.copy(route = MainRoute.EmojiCollectionExample)
+
+fun MainViewModel.routeClickCollectionViewExampleButtonAction(state: MainState) = state.copy(route = MainRoute.CollectionViewExample)
+
+

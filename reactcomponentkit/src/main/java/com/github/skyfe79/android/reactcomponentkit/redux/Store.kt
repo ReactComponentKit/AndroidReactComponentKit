@@ -1,8 +1,6 @@
 package com.github.skyfe79.android.reactcomponentkit.redux
 
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.subscribeBy
@@ -14,6 +12,7 @@ class Store<S: State> {
     lateinit var state: S
         private set
     private lateinit var reducers: Array<Reducer<S>>
+    private lateinit var reducers2: MutableMap<Action, List<Reducer2<S>>>
     private lateinit var afters: Array<After<S>>
     private val disposables = CompositeDisposable()
 
@@ -30,13 +29,19 @@ class Store<S: State> {
         afters: Array<After<S>> = emptyArray()) {
         this.state = initialState
         this.reducers = reducers
+        this.reducers2 = mutableMapOf()
         this.afters = afters
     }
 
     fun deinitialize() {
         reducers = emptyArray()
+        reducers2 = mutableMapOf()
         afters = emptyArray()
         disposables.clear()
+    }
+
+    fun map(action: Action, vararg r: Reducer2<S>) {
+        reducers2[action] = r.toList()
     }
 
     /**
@@ -55,12 +60,12 @@ class Store<S: State> {
         return Single.create { single ->
             // reset error
             this@Store.state.error = null
-
-            val disposable = reducers.toObservable()
+            val reducersForAction: List<Reducer2<S>> = reducers2[action] ?: emptyList()
+            val disposable = reducersForAction.toObservable()
                 .subscribeOn(Schedulers.single())
                 .observeOn(Schedulers.single())
                 .map { reducer ->
-                    reducer(action)
+                    reducer(this@Store.state)
                 }
                 .doOnNext { modifiedState ->
                     this@Store.state = modifiedState

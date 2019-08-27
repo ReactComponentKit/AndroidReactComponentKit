@@ -21,17 +21,29 @@ class CollectionViewModel(application: Application): RCKViewModel<CollectionStat
     override fun setupStore() {
         initStore { store ->
             store.set(
-                initialState = CollectionState(),
-                reducers = arrayOf(::loadEmoji, ::makeSectionModels)
+                initialState = CollectionState()
+                //reducers = arrayOf(::loadEmoji, ::makeSectionModels)
+            )
+
+            // map action to reducers
+            store.map(LoadAction, ::loadEmoji2, ::makeSectionModels2)
+            // or
+            store.map(LoadAction,
+                { state ->
+                    //it's reducer
+                    state
+                },
+                {
+                    //it's reducer
+                    it
+                }
             )
         }
-
     }
 
     override fun beforeDispatch(action: Action): Action = when(action) {
-        is LoadAction -> {
-            VoidAction
-            //if (store.state.emojis.isNotEmpty()) VoidAction else action
+        is LoadAction -> withState { state ->
+            if (state.emojis.isNotEmpty()) VoidAction else action
         }
         else -> action
     }

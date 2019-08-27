@@ -7,6 +7,8 @@ import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.toObservable
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantLock
 
@@ -175,14 +177,12 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
         }
     }
 
-    fun withState(block: RCKViewModel<S>.(S) -> Unit) {
+    fun <R> withState(block: RCKViewModel<S>.(S) -> R): R {
         readLock.lock()
         try {
-            block(this.store.state)
+            return block(this.store.state)
         } finally {
             readLock.unlock()
         }
     }
-
-
 }
