@@ -26,12 +26,12 @@ abstract class AndroidViewModelType<S: State>(application: Application): Android
     }
 
     override fun onCleared() {
-        clear()
+        dispose()
         super.onCleared()
     }
 
 
-    fun clear() {
+    fun dispose() {
         disposables.dispose()
         store.deinitialize()
     }
