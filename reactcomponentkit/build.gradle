@@ -17,7 +17,7 @@ publish {
     userOrg = 'skyfe79'
     groupId = 'com.github.skyfe79.android'
     artifactId = 'reactcomponentkit'
-    publishVersion = '1.2.8'
+    publishVersion = '1.2.9'
     desc = 'AndroidReactComponentKit = Component + MVVM + Redux for Android!!!'
     website = 'https://github.com/ReactComponentKit/AndroidReactComponentKit'
 }
@@ -29,8 +29,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 10
-        versionName "1.2.8"
+        versionCode 11
+        versionName "1.2.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
