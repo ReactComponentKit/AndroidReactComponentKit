@@ -33,7 +33,7 @@ class EmojiViewComponent(token: Token): ViewComponent(token) {
             }
         }
 
-        rootLayout.onClick {
+        rootLayout.setOnClickListener {
             this@EmojiViewComponent.token
             dispatch(ClickEmojiAction(emojiTextView.text.toString()))
         }

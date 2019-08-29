@@ -5,43 +5,18 @@ import com.github.skyfe79.android.library.app.MainState
 import com.github.skyfe79.android.library.app.MainViewModel
 import com.github.skyfe79.android.library.app.action.*
 import com.github.skyfe79.android.reactcomponentkit.redux.Action
-import com.github.skyfe79.android.reactcomponentkit.redux.State
-import io.reactivex.Observable
 
-fun MainViewModel.routeReducer(action: Action): MainState = setState { state ->
-    when (action) {
-        is ClickCounterExampleButtonAction -> {
-            val mutatedState = state.copy(route = MainRoute.CounterExample)
-            mutatedState
-        }
-        is ClickCounterExample2ButtonAction -> {
-            val mutatedState = state.copy(route = MainRoute.CounterExample2)
-            mutatedState
-        }
-        is ClickRecyclerViewExampleButtonAction -> {
-            val mutatedState = state.copy(route = MainRoute.RecyclerViewExample)
-            mutatedState
-        }
-        is ClickEmojiExampleButtonAction -> {
-            val mutatedState = state.copy(route = MainRoute.EmojiCollectionExample)
-            mutatedState
-        }
-        is ClickCollectionViewExampleButtonAction -> {
-            val mutatedState = state.copy(route = MainRoute.CollectionViewExample)
-            mutatedState
-        }
-        else -> state
-    }
+
+fun MainViewModel.routeToCounterExample(state: MainState, action: ClickCounterExampleButtonAction): MainState {
+    return state.copy(route = MainRoute.CounterExample)
 }
 
-fun MainViewModel.routeClickCounterExampleButtonAction(state: MainState) = state.copy(route = MainRoute.CounterExample)
+fun MainViewModel.routeToCounterExample2(state: MainState, action: ClickCounterExample2ButtonAction) = state.copy(route = MainRoute.CounterExample2)
 
-fun MainViewModel.routeClickCounterExample2ButtonAction(state: MainState) = state.copy(route = MainRoute.CounterExample2)
+fun MainViewModel.routeToRecyclerViewExample(state: MainState, action: ClickRecyclerViewExampleButtonAction) = state.copy(route = MainRoute.RecyclerViewExample)
 
-fun MainViewModel.routeClickRecyclerViewExampleButtonAction(state: MainState) = state.copy(route = MainRoute.RecyclerViewExample)
+fun MainViewModel.routeToEmojiExample(state: MainState, action: ClickEmojiExampleButtonAction) = state.copy(route = MainRoute.EmojiCollectionExample)
 
-fun MainViewModel.routeClickEmojiExampleButtonAction(state: MainState) = state.copy(route = MainRoute.EmojiCollectionExample)
-
-fun MainViewModel.routeClickCollectionViewExampleButtonAction(state: MainState) = state.copy(route = MainRoute.CollectionViewExample)
+fun MainViewModel.routeToCollectionViewExample(state: MainState) = state.copy(route = MainRoute.CollectionViewExample)
 
 

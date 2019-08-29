@@ -4,16 +4,40 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
+import kotlin.reflect.KClass
+
 
 class Store<S: State> {
 
+    inner class Flow<STATE: State, A: Action>(private val reducerList: List<Any>) {
+
+        @Suppress("UNCHECKED_CAST")
+        fun flow(action: Action): Single<S> {
+            return Single.create { emitter ->
+                reducerList.forEach { anyValue ->
+                    val reducer = anyValue as Reducer<STATE, A>
+                    val typedAction = action as A
+                    val typedState = this@Store.state.copyState() as STATE
+
+                    try {
+                        val mutatedState = reducer(typedState, typedAction) as S
+                        this@Store.state = mutatedState
+                    } catch (e: Throwable) {
+                        emitter.onError(e)
+                    }
+                }
+
+                emitter.onSuccess(this@Store.state.copyState() as S)
+            }
+        }
+    }
+
     lateinit var state: S
         private set
-    private lateinit var reducers: Array<Reducer<S>>
-    private lateinit var reducers2: MutableMap<Action, List<Reducer2<S>>>
-    private lateinit var afters: Array<After<S>>
+    lateinit var actionFlowMap: MutableMap<KClass<*>, Flow<S, Action>>
+        private set
+    private lateinit var afters: List<After<S>>
     private val disposables = CompositeDisposable()
 
     companion object {
@@ -23,25 +47,32 @@ class Store<S: State> {
         }
     }
 
-    fun set(
-        initialState: S,
-        reducers: Array<Reducer<S>> = emptyArray(),
-        afters: Array<After<S>> = emptyArray()) {
-        this.state = initialState
-        this.reducers = reducers
-        this.reducers2 = mutableMapOf()
-        this.afters = afters
+//    fun set(
+//        initialState: S,
+//        afters: Array<After<S>> = emptyArray()) {
+//        this.state = initialState
+//        this.actionFlowMap = mutableMapOf()
+//        this.afters = afters
+//    }
+
+    fun initialState(state: S) {
+        this.state = state
+        this.actionFlowMap = mutableMapOf()
+        this.afters = emptyList()
     }
 
     fun deinitialize() {
-        reducers = emptyArray()
-        reducers2 = mutableMapOf()
-        afters = emptyArray()
+        actionFlowMap = mutableMapOf()
+        afters = emptyList()
         disposables.clear()
     }
 
-    fun map(action: Action, vararg r: Reducer2<S>) {
-        reducers2[action] = r.toList()
+    inline fun <reified A: Action> flow(vararg reducers: Reducer<S, A>) {
+        actionFlowMap[A::class] = Flow(reducers.toList())
+    }
+
+    fun afterFlow(vararg afters: After<S>) {
+        this.afters = afters.toList()
     }
 
     /**
@@ -60,30 +91,23 @@ class Store<S: State> {
         return Single.create { single ->
             // reset error
             this@Store.state.error = null
-            val reducersForAction: List<Reducer2<S>> = reducers2[action] ?: emptyList()
-            val disposable = reducersForAction.toObservable()
-                .subscribeOn(Schedulers.single())
-                .observeOn(Schedulers.single())
-                .map { reducer ->
-                    reducer(this@Store.state)
-                }
-                .doOnNext { modifiedState ->
-                    this@Store.state = modifiedState
-                }
-                .reduce { _: S, nextState: S ->
-                    nextState
-                }
-                .subscribeBy(
-                    onSuccess = { finalState: S ->
-                        single.onSuccess(finalState)
-                    },
-                    onError = { error ->
-                        this@Store.state.error = Error(error, action)
-                        single.onSuccess(this@Store.state)
-                    }
-                )
 
-            disposables.add(disposable)
+            val actionFlow = actionFlowMap[action::class]
+            actionFlow?.let {
+                val disposable = it.flow(action)
+                    .subscribeOn(Schedulers.single())
+                    .observeOn(Schedulers.single())
+                    .subscribeBy(
+                        onSuccess = { newState ->
+                            single.onSuccess(newState)
+                        },
+                        onError = { error ->
+                            this@Store.state.error = Error(error, action)
+                            single.onSuccess(this@Store.state)
+                        }
+                    )
+                disposables.add(disposable)
+            }
         }
     }
 

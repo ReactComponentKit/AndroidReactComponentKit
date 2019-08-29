@@ -13,27 +13,27 @@ fun FragmentComponent.dispatch(action: Action) {
     viewModel.let { it?.dispatch(action) }
 }
 
-fun FragmentComponent.dispatch(action: (RCKViewModel<*>) -> Unit) {
-    val viewModel = RCK.viewModel(token)
-    viewModel?.let { action(it) }
-}
+//fun FragmentComponent.dispatch(action: (RCKViewModel<*>) -> Unit) {
+//    val viewModel = RCK.viewModel(token)
+//    viewModel?.let { action(it) }
+//}
 
 fun <T> LayoutComponent<T>.dispatch(action: Action) {
     val viewModel = RCK.viewModel(token)
     viewModel.let { it?.dispatch(action) }
 }
 
-fun <T> LayoutComponent<T>.dispatch(action: (RCKViewModel<*>) -> Unit) {
-    val viewModel = RCK.viewModel(token)
-    viewModel?.let { action(it) }
-}
+//fun <T> LayoutComponent<T>.dispatch(action: (RCKViewModel<*>) -> Unit) {
+//    val viewModel = RCK.viewModel(token)
+//    viewModel?.let { action(it) }
+//}
 
 fun ViewComponent.dispatch(action: Action) {
     val viewModel = RCK.viewModel(token)
     viewModel.let { it?.dispatch(action) }
 }
 
-fun ViewComponent.dispatch(action: (RCKViewModel<*>) -> Unit) {
-    val viewModel = RCK.viewModel(token)
-    viewModel?.let { action(it) }
-}
+//fun ViewComponent.dispatch(action: (RCKViewModel<*>) -> Unit) {
+//    val viewModel = RCK.viewModel(token)
+//    viewModel?.let { action(it) }
+//}

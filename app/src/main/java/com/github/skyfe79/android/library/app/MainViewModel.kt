@@ -15,7 +15,11 @@ enum class MainRoute {
     EmojiCollectionExample,
     CollectionViewExample
 }
-data class MainState(var route: MainRoute): State()
+data class MainState(var route: MainRoute): State() {
+    override fun copyState(): MainState {
+        return this.copy()
+    }
+}
 
 class MainViewModel(application: Application): RCKViewModel<MainState>(application) {
 
@@ -23,16 +27,15 @@ class MainViewModel(application: Application): RCKViewModel<MainState>(applicati
 
     override fun setupStore() {
         initStore { store ->
-            store.set(
-                initialState = MainState(MainRoute.None),
-                reducers = arrayOf(::routeReducer)
-            )
+            store.initialState(MainState(MainRoute.None))
 
-            store.map(ClickCounterExampleButtonAction, ::routeClickCounterExampleButtonAction)
-            store.map(ClickCounterExample2ButtonAction, ::routeClickCounterExample2ButtonAction)
-            store.map(ClickRecyclerViewExampleButtonAction, ::routeClickRecyclerViewExampleButtonAction)
-            store.map(ClickEmojiExampleButtonAction, ::routeClickEmojiExampleButtonAction)
-            store.map(ClickCollectionViewExampleButtonAction, { it.copy(route = MainRoute.CollectionViewExample) })
+            store.flow<ClickCounterExampleButtonAction>(::routeToCounterExample)
+            store.flow<ClickCounterExample2ButtonAction>(::routeToCounterExample2)
+            store.flow<ClickRecyclerViewExampleButtonAction>(::routeToRecyclerViewExample)
+            store.flow<ClickEmojiExampleButtonAction>(::routeToEmojiExample)
+            store.flow<ClickCollectionViewExampleButtonAction>({ state, _ ->
+                state.copy(route = MainRoute.CollectionViewExample)
+            })
         }
     }
 

@@ -6,8 +6,6 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
 import com.github.skyfe79.android.library.app.R
 import com.github.skyfe79.android.library.app.examples.collectionview.action.LoadAction
-import com.github.skyfe79.android.library.app.examples.collectionview.reducer.loadEmoji2
-import com.github.skyfe79.android.library.app.examples.collectionview.reducer.makeSectionModels2
 import com.github.skyfe79.android.library.app.examples.emojicollection.components.EmojiViewComponent
 import com.github.skyfe79.android.library.app.examples.recyclerview.component.SectionViewComponent
 import com.github.skyfe79.android.reactcomponentkit.collectionview.CollectionViewAdapter

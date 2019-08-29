@@ -2,7 +2,8 @@ package com.github.skyfe79.android.library.app.examples.collectionview
 
 import android.app.Application
 import com.github.skyfe79.android.library.app.examples.collectionview.action.LoadAction
-import com.github.skyfe79.android.library.app.examples.collectionview.reducer.*
+import com.github.skyfe79.android.library.app.examples.collectionview.reducer.loadEmoji
+import com.github.skyfe79.android.library.app.examples.collectionview.reducer.makeSectionModels
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.DefaultSectionModel
 import com.github.skyfe79.android.reactcomponentkit.redux.*
 
@@ -10,7 +11,12 @@ import com.github.skyfe79.android.reactcomponentkit.redux.*
 data class CollectionState(
     var emojis: List<List<String>> = emptyList(),
     var sections: List<DefaultSectionModel> = emptyList()
-): State()
+): State() {
+
+    override fun copyState(): CollectionState {
+        return this.copy()
+    }
+}
 
 
 
@@ -20,22 +26,11 @@ class CollectionViewModel(application: Application): RCKViewModel<CollectionStat
 
     override fun setupStore() {
         initStore { store ->
-            store.set(
-                initialState = CollectionState()
-                //reducers = arrayOf(::loadEmoji, ::makeSectionModels)
-            )
-
-            // map action to reducers
-            store.map(LoadAction, ::loadEmoji2, ::makeSectionModels2)
-            // or
-            store.map(LoadAction,
-                { state ->
-                    //it's reducer
-                    state
-                },
-                {
-                    //it's reducer
-                    it
+            store.initialState(CollectionState())
+            store.flow<LoadAction>(
+                ::loadEmoji,
+                { state, _ ->
+                    makeSectionModels(state)
                 }
             )
         }

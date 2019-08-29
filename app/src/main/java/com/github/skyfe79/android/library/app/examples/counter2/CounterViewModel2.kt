@@ -1,7 +1,8 @@
 package com.github.skyfe79.android.library.app.examples.counter
 
 import android.app.Application
-import com.github.skyfe79.android.library.app.examples.counter.redux.countReducer
+import com.github.skyfe79.android.library.app.examples.counter.action.DecreaseAction
+import com.github.skyfe79.android.library.app.examples.counter.action.IncreaseAction
 import com.github.skyfe79.android.reactcomponentkit.redux.Output
 import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
 
@@ -11,11 +12,17 @@ class CounterViewModel2(application: Application): RCKViewModel<CounterState>(ap
 
     override fun setupStore() {
         initStore { store ->
-            store.set(
-                initialState = CounterState(0),
-                reducers = arrayOf(::countReducer)
-            )
+            store.initialState(CounterState(0))
+
+            store.flow<IncreaseAction>({ state, action ->
+                state.copy(count = state.count + action.payload)
+            })
+
+            store.flow<DecreaseAction>({ state, action ->
+                state.copy(count = state.count - action.payload)
+            })
         }
+
     }
 
     override fun on(newState: CounterState) {

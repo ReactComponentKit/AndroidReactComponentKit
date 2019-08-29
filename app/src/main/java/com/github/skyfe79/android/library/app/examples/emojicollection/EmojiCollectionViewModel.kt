@@ -2,12 +2,13 @@ package com.github.skyfe79.android.library.app.examples.emojicollection
 
 import android.app.Application
 import android.util.Log
+import com.github.skyfe79.android.library.app.examples.emojicollection.actions.AddEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.actions.RemoveEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.actions.ShuffleEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.components.ClickEmojiAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.*
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
-import com.github.skyfe79.android.reactcomponentkit.redux.Error
-import com.github.skyfe79.android.reactcomponentkit.redux.Output
-import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
-import com.github.skyfe79.android.reactcomponentkit.redux.State
+import com.github.skyfe79.android.reactcomponentkit.redux.*
 
 sealed class EmojiRoute {
     object None: EmojiRoute()
@@ -15,10 +16,14 @@ sealed class EmojiRoute {
 }
 
 data class EmojiCollectionState(
-    val emojis: List<String>,
-    val itemModels: List<ItemModel>,
+    val emojis: List<String> = emptyList(),
+    val itemModels: List<ItemModel> = emptyList(),
     val route: EmojiRoute = EmojiRoute.None
-): State()
+): State() {
+    override fun copyState(): EmojiCollectionState {
+        return this.copy()
+    }
+}
 
 class EmojiCollectionViewModel(application: Application): RCKViewModel<EmojiCollectionState>(application) {
 
@@ -27,9 +32,30 @@ class EmojiCollectionViewModel(application: Application): RCKViewModel<EmojiColl
 
     override fun setupStore() {
         initStore { store ->
-            store.set(
-                initialState = EmojiCollectionState(listOf(), listOf()),
-                reducers = arrayOf(::route, ::addEmoji, ::removeEmoji, ::shuffleEmoji, ::makeItemModels)
+
+            store.initialState(EmojiCollectionState())
+            store.afterFlow({
+                it.copy(route = EmojiRoute.None)
+            })
+
+
+            store.flow<ClickEmojiAction>({ state, action ->
+                    state.copy(route = EmojiRoute.AlertEmoji(action.emoji))
+            })
+
+            store.flow<AddEmojiAction>(
+                ::addEmoji,
+                { state, _ -> makeItemModels(state) }
+            )
+
+            store.flow<RemoveEmojiAction>(
+                ::removeEmoji,
+                { state, _ -> makeItemModels(state) }
+            )
+
+            store.flow<ShuffleEmojiAction>(
+                ::shuffleEmoji,
+                { state, _ -> makeItemModels(state) }
             )
         }
     }

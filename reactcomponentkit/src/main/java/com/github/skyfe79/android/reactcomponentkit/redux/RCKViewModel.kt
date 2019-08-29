@@ -24,6 +24,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
     private var applyNewState: Boolean = false
     private var actionQueue: Queue<Pair<Action, Boolean>> = Queue()
     private var isProcessingAction: AtomicBoolean = AtomicBoolean(false)
+    private var currentAction: Action = VoidAction
     private val writeLock = ReentrantLock()
     private val readLock = ReentrantLock()
 
@@ -46,6 +47,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
 
     private fun setupRxStream() {
         val disposable1 = rx_action
+            .subscribeOn(Schedulers.single())
             .doOnNext {
                 isProcessingAction.set(true)
             }
@@ -69,6 +71,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
                 }
             }
             .flatMap { action ->
+                currentAction = action
                 store.dispatch(action).toObservable()
             }
             .observeOn(AndroidSchedulers.mainThread())
@@ -166,6 +169,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
         block(this.store)
     }
 
+    /*
     fun setState(block: RCKViewModel<S>.(S) -> S): S {
         writeLock.lock()
         try {
@@ -176,6 +180,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
             writeLock.unlock()
         }
     }
+    */
 
     fun <R> withState(block: RCKViewModel<S>.(S) -> R): R {
         readLock.lock()
