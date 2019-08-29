@@ -4,7 +4,7 @@ import android.os.Build
 import android.view.View
 import java.util.concurrent.atomic.AtomicInteger
 
-class ID {
+class ViewId {
     companion object {
         private val nextId = AtomicInteger(1)
         val gen: Int

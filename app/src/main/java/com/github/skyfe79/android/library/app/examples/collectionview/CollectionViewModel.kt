@@ -6,6 +6,7 @@ import com.github.skyfe79.android.library.app.examples.collectionview.reducer.lo
 import com.github.skyfe79.android.library.app.examples.collectionview.reducer.makeSectionModels
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.DefaultSectionModel
 import com.github.skyfe79.android.reactcomponentkit.redux.*
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.RCKViewModel
 
 
 data class CollectionState(
@@ -34,13 +35,6 @@ class CollectionViewModel(application: Application): RCKViewModel<CollectionStat
                 }
             )
         }
-    }
-
-    override fun beforeDispatch(action: Action): Action = when(action) {
-        is LoadAction -> withState { state ->
-            if (state.emojis.isNotEmpty()) VoidAction else action
-        }
-        else -> action
     }
 
     override fun on(newState: CollectionState) {

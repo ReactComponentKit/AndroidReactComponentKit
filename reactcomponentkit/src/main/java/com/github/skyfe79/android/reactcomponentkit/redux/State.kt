@@ -8,4 +8,3 @@ interface StateCopyable <S> {
 abstract class State: StateCopyable<State> {
     var error: Error? = null
 }
-

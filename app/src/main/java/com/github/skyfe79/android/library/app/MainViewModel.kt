@@ -5,7 +5,7 @@ import com.github.skyfe79.android.library.app.action.*
 import com.github.skyfe79.android.reactcomponentkit.redux.Output
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.library.app.redux.*
-import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.RCKViewModel
 
 enum class MainRoute {
     None,

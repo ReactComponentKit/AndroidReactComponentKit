@@ -4,7 +4,7 @@ import android.app.Application
 import com.github.skyfe79.android.library.app.examples.counter.action.DecreaseAction
 import com.github.skyfe79.android.library.app.examples.counter.action.IncreaseAction
 import com.github.skyfe79.android.reactcomponentkit.redux.Output
-import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.RCKViewModel
 
 class CounterViewModel2(application: Application): RCKViewModel<CounterState>(application) {
 

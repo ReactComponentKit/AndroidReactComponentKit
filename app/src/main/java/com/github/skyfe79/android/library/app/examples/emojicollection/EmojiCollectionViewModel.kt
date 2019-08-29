@@ -9,6 +9,7 @@ import com.github.skyfe79.android.library.app.examples.emojicollection.component
 import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.*
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.redux.*
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.RCKViewModel
 
 sealed class EmojiRoute {
     object None: EmojiRoute()

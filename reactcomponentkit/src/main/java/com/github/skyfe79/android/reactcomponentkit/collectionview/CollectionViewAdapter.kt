@@ -11,9 +11,6 @@ import com.github.skyfe79.android.reactcomponentkit.recyclerview.CollectionViewC
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewCell
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewCellViewHolder
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.sticky.StickyHeaders
-import com.github.skyfe79.android.reactcomponentkit.redux.RCKViewModel
-import com.github.skyfe79.android.reactcomponentkit.redux.State
-import java.lang.ref.WeakReference
 import kotlin.reflect.KClass
 
 
