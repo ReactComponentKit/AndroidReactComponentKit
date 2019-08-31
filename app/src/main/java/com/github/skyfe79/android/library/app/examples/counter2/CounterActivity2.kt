@@ -14,7 +14,7 @@ class CounterActivity2: AppCompatActivity() {
     private val disposeBag = AutoDisposeBag(this)
     private lateinit var viewModel: CounterViewModel2
     private val layout2: CounterLayout2 by lazy {
-        CounterLayout2(viewModel.token, true)
+        CounterLayout2(viewModel.token)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

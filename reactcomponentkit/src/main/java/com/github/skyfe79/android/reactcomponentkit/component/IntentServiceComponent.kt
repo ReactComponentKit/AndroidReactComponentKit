@@ -1,23 +1,21 @@
 package com.github.skyfe79.android.reactcomponentkit.component
 
+import android.app.IntentService
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
 import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
-import org.jetbrains.anko.AnkoComponent
 
-/**
- * Use this component for Activity Root Layout
- */
-abstract class LayoutComponent<in T> : AnkoComponent<T>, ReactComponent {
+abstract class IntentServiceComponent(token: Token, name: String): IntentService(name), ReactComponent {
+    override var token: Token = token
 
-    override var token: Token
-
-    constructor(token: Token) {
-        this.token = token
+    init {
         this.onInit()
     }
 
     open fun onInit() = Unit
 
-    abstract override fun on(state: State)
+    /**
+     * It is called when the component is standalone view component.
+     */
+    override fun on(state: State) = Unit
 }

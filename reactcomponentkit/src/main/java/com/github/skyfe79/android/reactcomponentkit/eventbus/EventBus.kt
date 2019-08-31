@@ -1,5 +1,8 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.github.skyfe79.android.reactcomponentkit.eventbus
 
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.lang.Exception
@@ -15,6 +18,7 @@ internal data class Notification(val name: String, val sender: Any, val userInfo
  *  - empty: ignore eventbus
  *  - a valid token: post and receive events between eventbus which has same token
  */
+@Deprecated("Do not use EventBus. It will be removed on the next version")
 class EventBus<T: EventType>(val token: Token? = null) {
 
     private companion object {
@@ -69,7 +73,7 @@ class EventBus<T: EventType>(val token: Token? = null) {
     internal fun processNotification(notification: Notification) {
         if (!isAlive) return
 
-        val sender = notification.sender as? EventBus<T>
+        val sender = notification.sender as? EventBus<*>
         if (sender == null || sender === this) return
 
         val userInfo = notification.userInfo

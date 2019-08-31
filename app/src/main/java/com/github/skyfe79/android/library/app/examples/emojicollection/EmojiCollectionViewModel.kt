@@ -1,14 +1,15 @@
 package com.github.skyfe79.android.library.app.examples.emojicollection
 
-import com.github.skyfe79.android.library.app.examples.emojicollection.middlewares.route
-import com.github.skyfe79.android.library.app.examples.emojicollection.postwares.*
-import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.addEmoji
-import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.removeEmoji
-import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.shuffleEmoji
+import android.app.Application
+import android.util.Log
+import com.github.skyfe79.android.library.app.examples.emojicollection.actions.AddEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.actions.RemoveEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.actions.ShuffleEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.components.ClickEmojiAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.reducers.*
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
-import com.github.skyfe79.android.reactcomponentkit.redux.Output
-import com.github.skyfe79.android.reactcomponentkit.redux.State
-import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
+import com.github.skyfe79.android.reactcomponentkit.redux.*
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.RCKViewModel
 
 sealed class EmojiRoute {
     object None: EmojiRoute()
@@ -16,27 +17,56 @@ sealed class EmojiRoute {
 }
 
 data class EmojiCollectionState(
-    val emojis: List<String>,
-    val itemModels: List<ItemModel>,
+    val emojis: List<String> = emptyList(),
+    val itemModels: List<ItemModel> = emptyList(),
     val route: EmojiRoute = EmojiRoute.None
-): State()
+): State() {
+    override fun copyState(): EmojiCollectionState {
+        return this.copy()
+    }
+}
 
-class EmojiCollectionViewModel: RootViewModelType<EmojiCollectionState>() {
+class EmojiCollectionViewModel(application: Application): RCKViewModel<EmojiCollectionState>(application) {
 
     val itemModels = Output<List<ItemModel>>(listOf())
     val routes = Output<EmojiRoute>(EmojiRoute.None)
 
     override fun setupStore() {
-        store.set(
-            initialState = EmojiCollectionState(listOf(), listOf()),
-            middlewares = arrayOf(::route),
-            reducers = arrayOf(::addEmoji, ::removeEmoji, ::shuffleEmoji),
-            postwares = arrayOf(::makeItemModels)
-        )
+        initStore { store ->
+
+            store.initialState(EmojiCollectionState())
+            store.afterFlow({
+                it.copy(route = EmojiRoute.None)
+            })
+
+
+            store.flow<ClickEmojiAction>({ state, action ->
+                state.copy(route = EmojiRoute.AlertEmoji(action.emoji))
+            })
+
+            store.flow<AddEmojiAction>(
+                ::addEmoji,
+                { state, _ -> makeItemModels(state) }
+            )
+
+            store.flow<RemoveEmojiAction>(
+                ::removeEmoji,
+                { state, _ -> makeItemModels(state) }
+            )
+
+            store.flow<ShuffleEmojiAction>(
+                ::shuffleEmoji,
+                { state, _ -> makeItemModels(state) }
+            )
+        }
     }
 
     override fun on(newState: EmojiCollectionState) {
         itemModels.accept(newState.itemModels)
         routes.accept(newState.route).afterReset(EmojiRoute.None)
+    }
+
+    override fun on(error: Error) {
+        Log.d("ERROR", "$error")
     }
 }

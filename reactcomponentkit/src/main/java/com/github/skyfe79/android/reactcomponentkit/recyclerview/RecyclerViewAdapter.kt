@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.component.ViewComponent
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.sticky.StickyHeaders
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -36,8 +36,8 @@ open class RecyclerViewAdapter(private val token: Token, private val useDiff: Bo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val cls = viewComponents[viewType] ?: throw IllegalStateException("viewComponent is null")
-        val cell = RecyclerViewCell(token = token, receiveState = false)
-        cell.viewComponent = cls.java.constructors.first().newInstance(token, false) as ViewComponent
+        val cell = RecyclerViewCell(token)
+        cell.viewComponent = cls.java.constructors.first().newInstance(token) as ViewComponent
         return cell.onCreateViewHolder(parent)
     }
 

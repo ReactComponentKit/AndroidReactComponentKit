@@ -3,7 +3,8 @@ package com.github.skyfe79.android.library.app
 import android.view.View
 import com.github.skyfe79.android.library.app.action.*
 import com.github.skyfe79.android.reactcomponentkit.component.LayoutComponent
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.dispatcher.dispatch
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import kotlinx.android.synthetic.main.activity_main.view.*
 import org.jetbrains.anko.AnkoContext
@@ -11,7 +12,7 @@ import org.jetbrains.anko.include
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class MainViewLayout(token: Token)
-    : LayoutComponent<MainActivity>(token, false) {
+    : LayoutComponent<MainActivity>(token) {
 
     /**
      * You can use layout xml file like below.

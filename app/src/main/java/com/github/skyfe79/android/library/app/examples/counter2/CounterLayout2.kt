@@ -8,12 +8,13 @@ import android.widget.TextView
 import com.github.skyfe79.android.library.app.examples.counter.action.DecreaseAction
 import com.github.skyfe79.android.library.app.examples.counter.action.IncreaseAction
 import com.github.skyfe79.android.reactcomponentkit.component.LayoutComponent
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.dispatcher.dispatch
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class CounterLayout2(token: Token, receiveState: Boolean): LayoutComponent<CounterActivity2>(token, receiveState) {
+class CounterLayout2(token: Token): LayoutComponent<CounterActivity2>(token) {
 
     private enum class IDs {
         TextView

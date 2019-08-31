@@ -12,7 +12,6 @@ import java.util.concurrent.Future
 
 private val uiHandler = Handler(Looper.getMainLooper())
 
-
 fun Any?.runOnUiThread(runnable: () -> Unit) {
     uiHandler.post(runnable)
 }
@@ -20,7 +19,7 @@ fun Any?.runOnUiThread(runnable: () -> Unit) {
 fun Any?.runOnUiThreadAfterDelay(delay : Long = 0L, runnable: () -> Unit) {
     uiHandler.postDelayed(delay, runnable)
 }
-
+/*
 fun Any?.async(runnable: () -> Unit) {
     Thread(runnable).start()
 }
@@ -28,3 +27,4 @@ fun Any?.async(runnable: () -> Unit) {
 fun Any?.async(executor: ExecutorService, runnable: () -> Unit): Future<out Any?> {
     return executor.submit(runnable)
 }
+*/

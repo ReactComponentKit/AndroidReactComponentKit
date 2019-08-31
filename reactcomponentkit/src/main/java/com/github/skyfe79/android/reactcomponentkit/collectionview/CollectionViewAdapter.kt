@@ -6,7 +6,7 @@ import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.RecyclerViewHelper
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.SectionModel
 import com.github.skyfe79.android.reactcomponentkit.component.ViewComponent
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.CollectionViewCellViewHolder
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewCell
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewCellViewHolder
@@ -60,6 +60,7 @@ open class CollectionViewAdapter(private val token: Token): RecyclerView.Adapter
     private val viewComponents: MutableMap<Int, KClass<*>> = mutableMapOf()
     private var sections: MutableList<SectionModel> = mutableListOf()
     private var items: MutableList<ItemModel> = mutableListOf()
+
     override fun getItemCount(): Int {
         return items.size
     }
@@ -91,8 +92,8 @@ open class CollectionViewAdapter(private val token: Token): RecyclerView.Adapter
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): RecyclerView.ViewHolder {
         return when(val item = items[position]) {
             is SectionContent -> {
-                val cell = RecyclerViewCell(token = token, receiveState = false)
-                val viewCompoent = NestedCollectionViewComponent(token, false)
+                val cell = RecyclerViewCell(token)
+                val viewCompoent = NestedCollectionViewComponent(token)
                 cell.viewComponent = viewCompoent
                 val viewHolder = cell.onCreateCollectionViewHolder(parent)
                 viewCompoent.setup(item, viewComponents)
@@ -101,8 +102,8 @@ open class CollectionViewAdapter(private val token: Token): RecyclerView.Adapter
 
             else -> {
                 val cls = viewComponents[item.componentClass.qualifiedName.hashCode()] ?: throw IllegalStateException("viewComponent is null")
-                val cell = RecyclerViewCell(token = token, receiveState = false)
-                cell.viewComponent = cls.java.constructors.first().newInstance(token, false) as ViewComponent
+                val cell = RecyclerViewCell(token)
+                cell.viewComponent = cls.java.constructors.first().newInstance(token) as ViewComponent
                 cell.onCreateViewHolder(parent)
             }
         }

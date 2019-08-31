@@ -3,21 +3,18 @@ package com.github.skyfe79.android.library.app.examples.recyclerview.component
 import android.content.Context
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import com.github.skyfe79.android.library.app.examples.recyclerview.model.BackgroundColorProvider
 import com.github.skyfe79.android.library.app.examples.recyclerview.model.TextMessageProvider
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.component.ViewComponent
 import com.github.skyfe79.android.reactcomponentkit.component.component
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import org.jetbrains.anko.*
-import org.jetbrains.anko.coroutines.experimental.bg
 
-class TextMessageViewComponent(override var token: Token, override var receiveState: Boolean): ViewComponent(token, receiveState) {
+class TextMessageViewComponent(token: Token): ViewComponent(token) {
     lateinit var textView: TextView
     lateinit var rootLayout: View
     override fun layout(ui: AnkoContext<Context>): View = with(ui) {
@@ -46,8 +43,8 @@ class TextMessageViewComponent(override var token: Token, override var receiveSt
     }
 }
 
-class SectionViewComponent(override var token: Token, override var receiveState: Boolean): ViewComponent(token, receiveState) {
-    private var textMessageViewComponent = TextMessageViewComponent(token, receiveState)
+class SectionViewComponent(token: Token): ViewComponent(token) {
+    private var textMessageViewComponent = TextMessageViewComponent(token)
 
     override fun layout(ui: AnkoContext<Context>): View = with(ui) {
         verticalLayout {

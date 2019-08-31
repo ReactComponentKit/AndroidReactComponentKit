@@ -5,19 +5,21 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.github.skyfe79.android.reactcomponentkit.R
 import com.github.skyfe79.android.reactcomponentkit.component.ViewComponent
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewAdapter
 import org.jetbrains.anko.*
 import kotlin.reflect.KClass
 
-class NestedCollectionViewComponent(override var token: Token, override var receiveState: Boolean = false): ViewComponent(token, receiveState) {
+class NestedCollectionViewComponent(
+    override var token: Token
+): ViewComponent(token) {
     internal lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecyclerViewAdapter
     private lateinit var currentContent: SectionContent
 
     internal fun setup(section: SectionContent, viewComponents: MutableMap<Int, KClass<*>>) {
         currentContent = section
-        adapter = RecyclerViewAdapter(token, false)
+        adapter = RecyclerViewAdapter(token)
         adapter.update(viewComponents)
         recyclerView.adapter = adapter
         recyclerView.setRecycledViewPool(RecyclerView.RecycledViewPool())

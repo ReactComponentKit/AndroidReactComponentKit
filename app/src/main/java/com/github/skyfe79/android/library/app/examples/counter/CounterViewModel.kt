@@ -1,26 +1,72 @@
 package com.github.skyfe79.android.library.app.examples.counter
 
-import com.github.skyfe79.android.library.app.examples.counter.redux.countReducer
+import android.app.Application
+import com.github.skyfe79.android.library.app.examples.counter.action.AsyncIncreaseAction
+import com.github.skyfe79.android.library.app.examples.counter.action.DecreaseAction
+import com.github.skyfe79.android.library.app.examples.counter.action.IncreaseAction
 import com.github.skyfe79.android.reactcomponentkit.redux.*
-import com.github.skyfe79.android.reactcomponentkit.viewmodel.RootViewModelType
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.RCKViewModel
+import io.reactivex.Single
 
-data class CounterState(val count: Int): State()
+data class CounterState(
+    val count: Int,
+    val asyncCount: Async<Int> = Async.Uninitialized
+): State() {
+    override fun copyState(): CounterState {
+        return this.copy()
+    }
+}
 
-class CounterViewModel: RootViewModelType<CounterState>() {
+class CounterViewModel(application: Application): RCKViewModel<CounterState>(application) {
 
     val count: Output<Int> = Output(0)
+    val asyncCount: Output<Async<Int>> = Output(Async.Uninitialized)
+
+    fun asyncIncrease(state: CounterState, action: AsyncIncreaseAction) = asyncReducer(state, action) {
+        Single.create<CounterState> { emitter ->
+            Thread.sleep(1000L)
+            withState { state ->
+                emitter.onSuccess(state.copy(count = state.count + action.payload))
+            }
+        }.toObservable()
+    }
 
     override fun setupStore() {
-        store.set(
-            initialState = CounterState(0),
-            middlewares = arrayOf(),
-            reducers = arrayOf(::countReducer),
-            postwares = arrayOf()
-        )
+        initStore { store ->
+            store.initialState(CounterState(0))
+
+            store.flow<AsyncIncreaseAction>(
+                { _, _ ->
+                    setState {
+                        it.copy(asyncCount = Async.Loading)
+                    }
+                },
+                { state, action ->
+                    state.copy(count = state.count + action.payload)
+                },
+                ::asyncIncrease,
+                asyncFlow { action ->
+                    Single.create<CounterState> { emitter ->
+                        Thread.sleep(2000L)
+                        withState { state ->
+                            emitter.onSuccess(state.copy(count = state.count + action.payload, asyncCount = Async.Success(state.count + action.payload)))
+                        }
+                    }.toObservable()
+                }
+            )
+
+            store.flow<IncreaseAction>({ state, action ->
+                state.copy(count = state.count + action.payload)
+            })
+
+            store.flow<DecreaseAction>({ state, action ->
+                state.copy(count = state.count - action.payload)
+            })
+        }
     }
 
     override fun on(newState: CounterState) {
         count.accept(newState.count)
-        propagate(newState)
+        asyncCount.accept(newState.asyncCount)
     }
 }

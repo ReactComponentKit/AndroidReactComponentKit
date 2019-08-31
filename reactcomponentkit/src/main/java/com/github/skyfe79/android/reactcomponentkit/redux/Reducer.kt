@@ -1,5 +1,9 @@
 package com.github.skyfe79.android.reactcomponentkit.redux
 
-import io.reactivex.Observable
-
-typealias Reducer = (State, Action) -> Observable<State>
+/**
+ * Reducer type.
+ * Why returns optional STATE?.
+ * If you define asyncReducer in a flow, asyncFlow makes a Reducer that returns null state
+ * not to update current state.
+ */
+typealias Reducer<STATE, ACTION> = (STATE, ACTION) -> STATE?
