@@ -6,7 +6,7 @@ import com.github.skyfe79.android.reactcomponentkit.collectionmodels.ItemModel
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.RecyclerViewHelper
 import com.github.skyfe79.android.reactcomponentkit.collectionmodels.SectionModel
 import com.github.skyfe79.android.reactcomponentkit.component.ViewComponent
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.CollectionViewCellViewHolder
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewCell
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewCellViewHolder

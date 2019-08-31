@@ -11,12 +11,11 @@ import com.github.skyfe79.android.library.app.examples.counter.action.DecreaseAc
 import com.github.skyfe79.android.library.app.examples.counter.action.IncreaseAction
 import com.github.skyfe79.android.reactcomponentkit.component.LayoutComponent
 import com.github.skyfe79.android.reactcomponentkit.dispatcher.dispatch
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.Async
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 import com.github.skyfe79.android.reactcomponentkit.subscriber.subscribeState
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class CounterLayout(token: Token): LayoutComponent<CounterActivity>(token) {
 

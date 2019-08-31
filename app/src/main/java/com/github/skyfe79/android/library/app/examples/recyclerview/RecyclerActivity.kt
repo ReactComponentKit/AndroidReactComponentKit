@@ -6,7 +6,7 @@ import com.github.skyfe79.android.library.app.R
 import com.github.skyfe79.android.library.app.examples.recyclerview.component.SectionViewComponent
 import com.github.skyfe79.android.library.app.examples.recyclerview.component.TextMessageViewComponent
 import com.github.skyfe79.android.library.app.examples.recyclerview.model.TextMessage
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.RecyclerViewAdapter
 import com.github.skyfe79.android.reactcomponentkit.recyclerview.sticky.StickyHeadersLinearLayoutManager
 import kotlinx.android.synthetic.main.activity_recycler.*

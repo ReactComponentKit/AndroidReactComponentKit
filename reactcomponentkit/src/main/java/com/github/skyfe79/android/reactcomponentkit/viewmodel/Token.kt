@@ -1,4 +1,4 @@
-package com.github.skyfe79.android.reactcomponentkit.eventbus
+package com.github.skyfe79.android.reactcomponentkit.viewmodel
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -21,7 +21,8 @@ data class Token(val token: String = UUID.randomUUID().toString()) : Parcelable 
 
         @JvmField
         val CREATOR: Parcelable.Creator<Token> = object : Parcelable.Creator<Token> {
-            override fun createFromParcel(source: Parcel): Token = Token(source)
+            override fun createFromParcel(source: Parcel): Token =
+                Token(source)
             override fun newArray(size: Int): Array<Token?> = arrayOfNulls(size)
         }
     }

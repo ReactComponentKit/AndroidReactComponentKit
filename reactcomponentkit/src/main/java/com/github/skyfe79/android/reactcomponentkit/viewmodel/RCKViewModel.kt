@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.github.skyfe79.android.reactcomponentkit.RCK
 import com.github.skyfe79.android.reactcomponentkit.StateSubscriber
-import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.*
 import com.github.skyfe79.android.reactcomponentkit.util.runOnUiThread
 import com.jakewharton.rxrelay2.BehaviorRelay
@@ -18,7 +17,8 @@ import java.lang.ref.WeakReference
 import java.util.concurrent.locks.ReentrantLock
 
 abstract class RCKViewModel<S: State>(application: Application): AndroidViewModel(application) {
-    val token: Token = Token()
+    val token: Token =
+        Token()
 
     private val rx_action: BehaviorRelay<Action> = BehaviorRelay.createDefault(
         VoidAction

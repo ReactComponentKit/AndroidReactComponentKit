@@ -17,7 +17,7 @@ publish {
     userOrg = 'skyfe79'
     groupId = 'com.github.skyfe79.android'
     artifactId = 'reactcomponentkit'
-    publishVersion = '1.2.8'
+    publishVersion = '2.0.0'
     desc = 'AndroidReactComponentKit = Component + MVVM + Redux for Android!!!'
     website = 'https://github.com/ReactComponentKit/AndroidReactComponentKit'
 }
@@ -29,7 +29,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 11
+        versionCode 20
         versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -59,8 +59,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation "io.reactivex.rxjava2:rxjava:2.2.8"
-    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.10"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
     implementation 'org.greenrobot:eventbus:3.1.1'
 
