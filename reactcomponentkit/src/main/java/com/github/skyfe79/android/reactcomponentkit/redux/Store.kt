@@ -47,22 +47,34 @@ class Store<S: State> {
         }
     }
 
+    /**
+     * set initial state for the store
+     */
     fun initialState(state: S) {
         this.state = state
         this.actionFlowMap = mutableMapOf()
         this.effects = emptyList()
     }
 
+    /**
+     * clean up memories
+     */
     fun deinitialize() {
         actionFlowMap = mutableMapOf()
         effects = emptyList()
         disposables.clear()
     }
 
+    /**
+     * Make a flow of reducers for an action
+     */
     inline fun <reified A: Action> flow(vararg reducers: Reducer<S, A>) {
         actionFlowMap[A::class] = Flow(reducers.toList())
     }
 
+    /**
+     * do some side effect after finishing a flow.
+     */
     fun afterFlow(vararg effects: Effect<S>) {
         this.effects = effects.toList()
     }
@@ -79,6 +91,9 @@ class Store<S: State> {
         state = mutatedState
     }
 
+    /**
+     * dispatch an action to start a flow for it.
+     */
     fun dispatch(action: Action): Single<S> {
         return Single.create { single ->
             // reset error

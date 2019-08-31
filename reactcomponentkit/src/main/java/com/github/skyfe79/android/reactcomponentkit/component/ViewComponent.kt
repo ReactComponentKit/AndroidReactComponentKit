@@ -1,6 +1,7 @@
 package com.github.skyfe79.android.reactcomponentkit.component
 
 import android.content.Context
+import android.util.AttributeSet
 import android.view.View
 import android.view.ViewManager
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
@@ -18,6 +19,7 @@ abstract class ViewComponent: AnkoComponent<Context>, ReactComponent {
 
     constructor(token: Token) {
         this.token = token
+        this.onInit()
     }
 
     override fun createView(ui: AnkoContext<Context>): View {
@@ -25,6 +27,8 @@ abstract class ViewComponent: AnkoComponent<Context>, ReactComponent {
         cachedView = view
         return view
     }
+
+    open fun onInit() = Unit
 
     /**
      * Configure component's ui at here
@@ -34,7 +38,7 @@ abstract class ViewComponent: AnkoComponent<Context>, ReactComponent {
     /**
      * It is called when the component is standalone.
      */
-    open fun on(state: State) = Unit
+    override fun on(state: State) = Unit
 
     /**
      * It is only called when the component is in RecyclerView's row

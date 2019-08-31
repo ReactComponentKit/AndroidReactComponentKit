@@ -4,10 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.github.skyfe79.android.reactcomponentkit.RCK
 import com.github.skyfe79.android.reactcomponentkit.ReactComponent
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
-import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
 
 internal enum class FragmentComponentState {
@@ -41,9 +39,12 @@ abstract class FragmentComponent: Fragment(), ReactComponent {
                 this@FragmentComponent.token = (it.getParcelable("token") as? Token) ?: Token.empty
             }
         }
+
+        this.onInit()
     }
 
-    abstract fun on(state: State)
+    open fun onInit() = Unit
+    abstract override fun on(state: State)
 }
 
 inline fun <reified T: FragmentComponent> FragmentActivity.fragmentComponent(token: Token): T {

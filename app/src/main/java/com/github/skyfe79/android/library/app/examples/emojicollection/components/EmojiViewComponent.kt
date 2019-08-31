@@ -12,6 +12,7 @@ import com.github.skyfe79.android.reactcomponentkit.dispatcher.dispatch
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.Action
 import com.github.skyfe79.android.reactcomponentkit.redux.State
+import com.github.skyfe79.android.reactcomponentkit.subscriber.subscribeState
 import kotlinx.android.synthetic.main.activity_main.view.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk27.coroutines.onClick
@@ -39,10 +40,6 @@ class EmojiViewComponent(token: Token): ViewComponent(token) {
         }
 
         return rootLayout
-    }
-
-    override fun on(state: State) {
-        //ignore
     }
 
     override fun on(item: ItemModel, position: Int) {

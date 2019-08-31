@@ -41,7 +41,7 @@ class EmojiCollectionViewModel(application: Application): RCKViewModel<EmojiColl
 
 
             store.flow<ClickEmojiAction>({ state, action ->
-                    state.copy(route = EmojiRoute.AlertEmoji(action.emoji))
+                state.copy(route = EmojiRoute.AlertEmoji(action.emoji))
             })
 
             store.flow<AddEmojiAction>(

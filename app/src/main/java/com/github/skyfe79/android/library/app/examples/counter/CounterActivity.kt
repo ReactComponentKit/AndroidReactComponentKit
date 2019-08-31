@@ -24,14 +24,5 @@ class CounterActivity: AppCompatActivity() {
         layout.setContentView(this)
 
         layout.countTextView.text = "${viewModel.count.value}"
-
-        viewModel
-            .count
-            .asObservable()
-            .subscribe {
-                layout.countTextView.text = "$it"
-            }
-            .disposedBy(disposeBag)
-
     }
 }

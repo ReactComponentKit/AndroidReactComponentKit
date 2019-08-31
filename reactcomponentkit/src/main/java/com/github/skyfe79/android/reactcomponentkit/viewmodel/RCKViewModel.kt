@@ -3,6 +3,7 @@ package com.github.skyfe79.android.reactcomponentkit.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.github.skyfe79.android.reactcomponentkit.RCK
+import com.github.skyfe79.android.reactcomponentkit.StateSubscriber
 import com.github.skyfe79.android.reactcomponentkit.eventbus.Token
 import com.github.skyfe79.android.reactcomponentkit.redux.*
 import com.github.skyfe79.android.reactcomponentkit.util.runOnUiThread
@@ -13,6 +14,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.lang.ref.WeakReference
 import java.util.concurrent.locks.ReentrantLock
 
 abstract class RCKViewModel<S: State>(application: Application): AndroidViewModel(application) {
@@ -25,6 +27,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
     private val disposables = CompositeDisposable()
     private val writeLock = ReentrantLock()
     private val readLock = ReentrantLock()
+    private var subscribers: MutableList<WeakReference<StateSubscriber>> = mutableListOf()
 
     init {
         setupRxStream()
@@ -36,9 +39,12 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
         super.onCleared()
     }
 
-
+    /**
+     * clean up memeries
+     */
     fun dispose() {
-        RCK.unregisterViewModel<S>(token)
+        RCK.unregisterViewModel(token)
+        subscribers = mutableListOf()
         disposables.dispose()
         store.deinitialize()
     }
@@ -62,28 +68,66 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
                         on(it)
                     }
                 } else {
-                    on(newState)
+                    dispatchStateToSubscribers(newState)
                 }
             }
 
         disposables.add(disposable)
     }
 
-    abstract fun setupStore()
+    /**
+     * register subscriber that receive the new state.
+     */
+    fun registerSubscriber(subscriber: StateSubscriber) {
+        val weakSubscriber = WeakReference<StateSubscriber>(subscriber)
+        subscribers.add(weakSubscriber)
+    }
 
+    /**
+     * dispatch mutated state to subscribers
+     */
+    private fun dispatchStateToSubscribers(state: S) {
+        on(state)
+        subscribers.forEach {
+            it.get()?.on(state)
+        }
+    }
+
+
+    /**
+     * dispatch action to the store.
+     */
     fun dispatch(action: Action) {
         rx_action.accept(action)
     }
 
-    open fun on(error: Error) = Unit
+    /**
+     * Called when receive the new state from store
+     */
+    protected abstract fun on(newState: S)
 
-    abstract fun on(newState: S)
+    /**
+     * Called when occured erros on the redux flow.
+     */
+    protected open fun on(error: Error) = Unit
 
-    fun initStore(block: RCKViewModel<S>.(Store<S>) -> Unit) {
+    /**
+     * Setup store. You should define this method and use initStore method in it.
+     */
+    abstract fun setupStore()
+
+    /**
+     * init store with block
+     * You can set initial state and define flows for actions
+     */
+    protected fun initStore(block: RCKViewModel<S>.(Store<S>) -> Unit) {
         RCK.registerViewModel(token, this)
         block(this.store)
     }
 
+    /**
+     * Set state and dispatch the mutated state to subscribers
+     */
     @Suppress("UNCHECKED_CAST")
     fun setState(block: RCKViewModel<S>.(S) -> S): S {
         writeLock.lock()
@@ -98,6 +142,9 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
         }
     }
 
+    /**
+     * Read state value
+     */
     @Suppress("UNCHECKED_CAST")
     fun <R> withState(block: RCKViewModel<S>.(S) -> R): R {
         readLock.lock()
@@ -108,12 +155,18 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
         }
     }
 
+    /**
+     * Make Async Reducer. Using it if you define standalone async reducer function.
+     */
     fun <A: Action> asyncReducer(state: S, action: A, block: RCKViewModel<S>.(A) -> Observable<S>): S {
         asyncFlow(block)(state, action)
         return state
     }
 
-    fun <A: Action> asyncFlow(block: RCKViewModel<S>.(A) -> Observable<S>): Reducer<S, A> {
+    /**
+     * Make Async reducer in a flow
+     */
+    protected fun <A: Action> asyncFlow(block: RCKViewModel<S>.(A) -> Observable<S>): Reducer<S, A> {
         return { _: S, action: A ->
             block(action)
                 .subscribeOn(Schedulers.io())
@@ -122,7 +175,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
                     onNext = { newState ->
                         writeLock.lock()
                         this.store.state = newState
-                        on(newState)
+                        dispatchStateToSubscribers(newState)
                         writeLock.unlock()
                     },
                     onError = { error ->
@@ -130,26 +183,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
                     }
                 )
                 .addTo(disposables)
-            null
+            null // do not update current state.
         }
     }
-
-//    @Suppress("UNCHECKED_CAST")
-//    fun <A: Action> asyncEffect(action: A, block: RCKViewModel<S>.(A) -> Observable<S>) {
-//        block(action)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeBy(
-//                onNext = { newState ->
-//                    writeLock.lock()
-//                    this.store.state = newState
-//                    on(newState)
-//                    writeLock.unlock()
-//                },
-//                onError = { error ->
-//                    on(Error(error, action))
-//                }
-//            )
-//            .addTo(disposables)
-//    }
 }

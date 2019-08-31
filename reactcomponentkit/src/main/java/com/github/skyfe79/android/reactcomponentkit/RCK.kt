@@ -13,7 +13,7 @@ internal object RCK {
         this.map[token] = WeakReference(viewModel)
     }
 
-    internal fun <S: State> unregisterViewModel(token: Token) {
+    internal fun unregisterViewModel(token: Token) {
         this.map.remove(token)
     }
 

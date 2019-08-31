@@ -1,6 +1,7 @@
 package com.github.skyfe79.android.library.app.examples.counter
 
 import android.app.Application
+import com.github.skyfe79.android.library.app.examples.counter.action.AsyncIncreaseAction
 import com.github.skyfe79.android.library.app.examples.counter.action.DecreaseAction
 import com.github.skyfe79.android.library.app.examples.counter.action.IncreaseAction
 import com.github.skyfe79.android.reactcomponentkit.redux.*
@@ -19,12 +20,9 @@ data class CounterState(
 class CounterViewModel(application: Application): RCKViewModel<CounterState>(application) {
 
     val count: Output<Int> = Output(0)
+    val asyncCount: Output<Async<Int>> = Output(Async.Uninitialized)
 
-    fun showLoading() = setState { state ->
-        state.copy(asyncCount = Async.Loading)
-    }
-
-    fun asyncIncrease(state: CounterState, action: IncreaseAction) = asyncReducer(state, action) {
+    fun asyncIncrease(state: CounterState, action: AsyncIncreaseAction) = asyncReducer(state, action) {
         Single.create<CounterState> { emitter ->
             Thread.sleep(1000L)
             withState { state ->
@@ -37,20 +35,29 @@ class CounterViewModel(application: Application): RCKViewModel<CounterState>(app
         initStore { store ->
             store.initialState(CounterState(0))
 
-            store.flow<IncreaseAction>(
+            store.flow<AsyncIncreaseAction>(
+                { _, _ ->
+                    setState {
+                        it.copy(asyncCount = Async.Loading)
+                    }
+                },
                 { state, action ->
-                    state.copy(count = state.count + 3)
+                    state.copy(count = state.count + action.payload)
                 },
                 ::asyncIncrease,
                 asyncFlow { action ->
                     Single.create<CounterState> { emitter ->
-                        Thread.sleep(5000L)
+                        Thread.sleep(2000L)
                         withState { state ->
-                            emitter.onSuccess(state.copy(count = state.count + action.payload))
+                            emitter.onSuccess(state.copy(count = state.count + action.payload, asyncCount = Async.Success(state.count + action.payload)))
                         }
                     }.toObservable()
                 }
             )
+
+            store.flow<IncreaseAction>({ state, action ->
+                state.copy(count = state.count + action.payload)
+            })
 
             store.flow<DecreaseAction>({ state, action ->
                 state.copy(count = state.count - action.payload)
@@ -60,5 +67,6 @@ class CounterViewModel(application: Application): RCKViewModel<CounterState>(app
 
     override fun on(newState: CounterState) {
         count.accept(newState.count)
+        asyncCount.accept(newState.asyncCount)
     }
 }
