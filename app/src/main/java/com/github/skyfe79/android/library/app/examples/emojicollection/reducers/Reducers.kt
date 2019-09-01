@@ -14,7 +14,7 @@ fun EmojiCollectionViewModel.addEmoji(state: EmojiCollectionState, action: AddEm
         val mutableEmojiList = state.emojis.toMutableList()
         val index = if (mutableEmojiList.isEmpty()) 0 else (0 until mutableEmojiList.size).random()
         mutableEmojiList.add(index, EmojiHelper.emoji)
-        return makeItemModels(state.copy(emojis = mutableEmojiList))
+        return state.copy(emojis = mutableEmojiList)
 }
 
 
@@ -23,7 +23,7 @@ fun EmojiCollectionViewModel.removeEmoji(state: EmojiCollectionState, action: Re
         val mutableEmojiList = state.emojis.toMutableList()
         val index = if (mutableEmojiList.isEmpty()) 0 else (0 until mutableEmojiList.size).random()
         mutableEmojiList.removeAt(index)
-        return makeItemModels(state.copy(emojis = mutableEmojiList))
+        return state.copy(emojis = mutableEmojiList)
     } catch (e: Exception) {
         throw  e
     }
