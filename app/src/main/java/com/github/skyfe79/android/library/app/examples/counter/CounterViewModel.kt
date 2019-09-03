@@ -4,6 +4,7 @@ import android.app.Application
 import com.github.skyfe79.android.library.app.examples.counter.action.AsyncIncreaseAction
 import com.github.skyfe79.android.library.app.examples.counter.action.DecreaseAction
 import com.github.skyfe79.android.library.app.examples.counter.action.IncreaseAction
+import com.github.skyfe79.android.library.app.examples.emojicollection.actions.AddEmojiAction
 import com.github.skyfe79.android.reactcomponentkit.redux.*
 import com.github.skyfe79.android.reactcomponentkit.viewmodel.RCKViewModel
 import io.reactivex.Single
@@ -25,10 +26,14 @@ class CounterViewModel(application: Application): RCKViewModel<CounterState>(app
     fun asyncIncrease(state: CounterState, action: AsyncIncreaseAction) = asyncReducer(state, action) {
         Single.create<CounterState> { emitter ->
             Thread.sleep(1000L)
-            withState { state ->
-                emitter.onSuccess(state.copy(count = state.count + action.payload))
+            withState {
+                emitter.onSuccess(copy(count = count + action.payload))
             }
         }.toObservable()
+    }
+
+    fun increasement(payload: Int) = setState {
+        copy(count = count + payload)
     }
 
     override fun setupStore() {
@@ -37,9 +42,7 @@ class CounterViewModel(application: Application): RCKViewModel<CounterState>(app
 
             store.flow<AsyncIncreaseAction>(
                 { _, _ ->
-                    setState {
-                        it.copy(asyncCount = Async.Loading)
-                    }
+                    setState { copy(asyncCount = Async.Loading) }
                 },
                 { state, action ->
                     state.copy(count = state.count + action.payload)
@@ -48,8 +51,8 @@ class CounterViewModel(application: Application): RCKViewModel<CounterState>(app
                 asyncFlow { action ->
                     Single.create<CounterState> { emitter ->
                         Thread.sleep(2000L)
-                        withState { state ->
-                            emitter.onSuccess(state.copy(count = state.count + action.payload, asyncCount = Async.Success(state.count + action.payload)))
+                        withState {
+                            emitter.onSuccess(copy(count = count + action.payload, asyncCount = Async.Success(count + action.payload)))
                         }
                     }.toObservable()
                 }

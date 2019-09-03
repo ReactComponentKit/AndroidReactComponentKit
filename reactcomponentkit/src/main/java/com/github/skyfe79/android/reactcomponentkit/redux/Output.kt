@@ -10,7 +10,7 @@ class Output<T>(defaultValue: T?) {
     val value: T?
         get() = behaviorRelay.value
 
-    fun accept(value: T, withoutCompare: Boolean = false): ResetChanin {
+    fun accept(value: T, withoutCompare: Boolean = false): FlowChanin {
         if (withoutCompare) {
             behaviorRelay.accept(value)
         } else {
@@ -19,15 +19,15 @@ class Output<T>(defaultValue: T?) {
                 behaviorRelay.accept(value)
             }
         }
-        return ResetChanin()
+        return FlowChanin()
     }
 
     fun asObservable(): Observable<T> {
         return behaviorRelay.observeOn(AndroidSchedulers.mainThread())
     }
 
-    inner class ResetChanin {
-        fun afterReset(value: T) {
+    inner class FlowChanin {
+        fun afterFlow(value: T) {
             accept(value, withoutCompare = true)
         }
     }

@@ -40,6 +40,6 @@ class MainViewModel(application: Application): RCKViewModel<MainState>(applicati
     }
 
     override fun on(newState: MainState) {
-        route.accept(newState.route).afterReset(MainRoute.None)
+        route.accept(newState.route).afterFlow(MainRoute.None)
     }
 }

@@ -35,10 +35,6 @@ class EmojiCollectionViewModel(application: Application): RCKViewModel<EmojiColl
         initStore { store ->
 
             store.initialState(EmojiCollectionState())
-            store.afterFlow({
-                it.copy(route = EmojiRoute.None)
-            })
-
 
             store.flow<ClickEmojiAction>({ state, action ->
                 state.copy(route = EmojiRoute.AlertEmoji(action.emoji))
@@ -58,12 +54,16 @@ class EmojiCollectionViewModel(application: Application): RCKViewModel<EmojiColl
                 ::shuffleEmoji,
                 { state, _ -> makeItemModels(state) }
             )
+
+            store.afterStateFlow({
+                copy(route = EmojiRoute.None)
+            })
         }
     }
 
     override fun on(newState: EmojiCollectionState) {
         itemModels.accept(newState.itemModels)
-        routes.accept(newState.route).afterReset(EmojiRoute.None)
+        routes.accept(newState.route).afterFlow(EmojiRoute.None)
     }
 
     override fun on(error: Error) {

@@ -8,6 +8,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlin.reflect.KClass
 
 
+
+
 class Store<S: State> {
 
     inner class Flow<STATE: State, A: Action>(private val reducerList: List<Any>) {
@@ -36,6 +38,7 @@ class Store<S: State> {
 
     lateinit var state: S
         internal set
+    private var beforeActionFlow: (S.(Action) -> Action)? = null
     lateinit var actionFlowMap: MutableMap<KClass<*>, Flow<S, Action>>
         private set
     private lateinit var effects: List<Effect<S>>
@@ -65,6 +68,15 @@ class Store<S: State> {
         disposables.clear()
     }
 
+    fun beforeActionFlow(actionFlow: S.(Action) -> Action) {
+        this.beforeActionFlow = actionFlow
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    internal fun actionFlow(action: Action): Action {
+        return beforeActionFlow?.invoke(this.state.copyState() as S, action) ?: action
+    }
+
     /**
      * Make a flow of reducers for an action
      */
@@ -75,7 +87,7 @@ class Store<S: State> {
     /**
      * do some side effect after finishing a flow.
      */
-    fun afterFlow(vararg effects: Effect<S>) {
+    fun afterStateFlow(vararg effects: Effect<S>) {
         this.effects = effects.toList()
     }
 
@@ -86,7 +98,7 @@ class Store<S: State> {
     internal fun doAfterEffects() {
         var mutatedState = state
         effects.forEach {
-            mutatedState = it(mutatedState)
+            mutatedState = it(mutatedState, mutatedState)
         }
         state = mutatedState
     }
