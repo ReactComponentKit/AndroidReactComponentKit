@@ -17,25 +17,25 @@ import java.lang.ref.WeakReference
 import java.util.concurrent.locks.ReentrantLock
 
 abstract class RCKViewModel<S: State>(application: Application): AndroidViewModel(application) {
-    val token: Token =
-        Token()
+    val token: Token = Token()
 
     private val rx_action: BehaviorRelay<Action> = BehaviorRelay.createDefault(
         VoidAction
     )
     private val store = Store<S>()
     private val disposables = CompositeDisposable()
+    private var actionQueue: Queue<Action> = Queue()
     private val writeLock = ReentrantLock()
     private val readLock = ReentrantLock()
     private var subscribers: MutableList<WeakReference<StateSubscriber>> = mutableListOf()
 
     init {
-        setupRxStream()
+        this.setupRxStream()
         this.setupStore()
     }
 
     override fun onCleared() {
-        dispose()
+        this.dispose()
         super.onCleared()
     }
 
@@ -44,6 +44,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
      */
     fun dispose() {
         RCK.unregisterViewModel(token)
+        actionQueue.clear()
         subscribers = mutableListOf()
         disposables.dispose()
         store.deinitialize()
@@ -55,12 +56,21 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
             .filter { action ->
                 action !is VoidAction
             }
+            .filter { action ->
+                store.actionFlow(action) !is VoidAction
+            }
             .flatMap { action ->
                 store.dispatch(action).toObservable()
             }
             .observeOn(AndroidSchedulers.mainThread())
             .doAfterNext {
                 store.doAfterEffects()
+                if (actionQueue.isNotEmpty) {
+                    val nextAction = actionQueue.dequeue()
+                    nextAction?.let {
+                        rx_action.accept(it)
+                    }
+                }
             }
             .subscribe { newState ->
                 if (newState.error != null) {
@@ -70,6 +80,8 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
                 } else {
                     dispatchStateToSubscribers(newState)
                 }
+
+
             }
 
         disposables.add(disposable)
@@ -102,6 +114,17 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
     }
 
     /**
+     * dispatch action on the next run loop to the store.
+     */
+    fun nextDispatch(action: Action) {
+        if (actionQueue.isEmpty) {
+            rx_action.accept(action)
+        } else {
+            actionQueue.enqueue(action)
+        }
+    }
+
+    /**
      * Called when receive the new state from store
      */
     protected abstract fun on(newState: S)
@@ -129,12 +152,14 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
      * Set state and dispatch the mutated state to subscribers
      */
     @Suppress("UNCHECKED_CAST")
-    fun setState(block: RCKViewModel<S>.(S) -> S): S {
+    fun setState(block: S.(S) -> S): S {
         writeLock.lock()
         try {
-            val newState = block(this.store.state.copyState() as S)
+            val state = this.store.state.copyState() as S
+            val newState = state.block(state)
+            this.store.state = newState
             runOnUiThread {
-                this.on(newState)
+                dispatchStateToSubscribers(newState)
             }
             return newState
         } finally {
@@ -146,10 +171,11 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
      * Read state value
      */
     @Suppress("UNCHECKED_CAST")
-    fun <R> withState(block: RCKViewModel<S>.(S) -> R): R {
+    fun <R> withState(block: S.(S) -> R): R {
         readLock.lock()
         try {
-            return block(this.store.state.copyState() as S)
+            val state = this.store.state.copyState() as S
+            return state.block(state)
         } finally {
             readLock.unlock()
         }
