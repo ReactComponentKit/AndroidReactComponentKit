@@ -19,13 +19,3 @@ fun ViewComponent.dispatch(action: Action) {
     val viewModel = RCK.viewModel(token)
     viewModel.let { it?.dispatch(action) }
 }
-
-fun ServiceComponent.dispatch(action: Action) {
-    val viewModel = RCK.viewModel(token)
-    viewModel.let { it?.dispatch(action) }
-}
-
-fun IntentServiceComponent.dispatch(action: Action) {
-    val viewModel = RCK.viewModel(token)
-    viewModel.let { it?.dispatch(action) }
-}

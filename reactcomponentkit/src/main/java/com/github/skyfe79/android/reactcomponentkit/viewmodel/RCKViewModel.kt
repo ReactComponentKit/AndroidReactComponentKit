@@ -182,19 +182,24 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
     }
 
     /**
-     * Make Async Reducer. Using it if you define standalone async reducer function.
+     * Do async job and wait until finished it.
      */
-    fun <A: Action> asyncReducer(state: S, action: A, block: RCKViewModel<S>.(A) -> Observable<S>): S {
-        asyncFlow(block)(state, action)
-        return state
+    @Suppress("UNCHECKED_CAST")
+    protected fun <A: Action> awaitFlow(asyncReducer: AsyncReducer<S, A>): Reducer<S, A> {
+        return { _: S, action: A ->
+            val s = asyncReducer(action)
+                .subscribeOn(Schedulers.io())
+                .blockingLast(this.store.state.copyState() as S)
+            s
+        }
     }
 
     /**
-     * Make Async reducer in a flow
+     * Do async job and return right away.
      */
-    protected fun <A: Action> asyncFlow(block: RCKViewModel<S>.(A) -> Observable<S>): Reducer<S, A> {
+    protected fun <A: Action> asyncFlow(asyncReducer: AsyncReducer<S, A>): Reducer<S, A> {
         return { _: S, action: A ->
-            block(action)
+            asyncReducer(action)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -209,7 +214,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
                     }
                 )
                 .addTo(disposables)
-            null // do not update current state.
+            null
         }
     }
 }
