@@ -17,6 +17,6 @@ fun MainViewModel.routeToRecyclerViewExample(state: MainState, action: ClickRecy
 
 fun MainViewModel.routeToEmojiExample(state: MainState, action: ClickEmojiExampleButtonAction) = state.copy(route = MainRoute.EmojiCollectionExample)
 
-fun MainViewModel.routeToCollectionViewExample(state: MainState) = state.copy(route = MainRoute.CollectionViewExample)
+fun MainViewModel.routeToCollectionViewExample(state: MainState, action: ClickCollectionViewExampleButtonAction) = state.copy(route = MainRoute.CollectionViewExample)
 
 

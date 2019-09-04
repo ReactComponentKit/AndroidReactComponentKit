@@ -28,6 +28,7 @@ class Store<S: State> {
                         }
                     } catch (e: Throwable) {
                         emitter.onError(e)
+                        return@create
                     }
                 }
 

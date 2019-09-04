@@ -1,8 +1,10 @@
 package com.github.skyfe79.android.reactcomponentkit.subscriber
 
 import com.github.skyfe79.android.reactcomponentkit.RCK
+import com.github.skyfe79.android.reactcomponentkit.StateSubscriber
 import com.github.skyfe79.android.reactcomponentkit.component.*
 import com.github.skyfe79.android.reactcomponentkit.redux.Action
+import com.github.skyfe79.android.reactcomponentkit.viewmodel.Token
 
 
 fun FragmentComponent.subscribeState() {
@@ -20,12 +22,7 @@ fun ViewComponent.subscribeState() {
     viewModel.let { it?.registerSubscriber(this) }
 }
 
-fun ServiceComponent.subscribeState() {
-    val viewModel = RCK.viewModel(token)
-    viewModel.let { it?.registerSubscriber(this) }
-}
-
-fun IntentServiceComponent.subscribeState() {
+fun StateSubscriber.subscribeState(token: Token) {
     val viewModel = RCK.viewModel(token)
     viewModel.let { it?.registerSubscriber(this) }
 }
