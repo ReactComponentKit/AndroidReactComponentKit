@@ -69,12 +69,15 @@ class Store<S: State> {
         disposables.clear()
     }
 
+    /**
+     * Setup side effect before flowing actions.
+     */
     fun beforeActionFlow(actionFlow: S.(Action) -> Action) {
         this.beforeActionFlow = actionFlow
     }
 
     @Suppress("UNCHECKED_CAST")
-    internal fun actionFlow(action: Action): Action {
+    internal fun startFlow(action: Action): Action {
         return beforeActionFlow?.invoke(this.state.copyState() as S, action) ?: action
     }
 
