@@ -7,6 +7,8 @@ import com.github.skyfe79.android.library.app.examples.counter.action.DecreaseAc
 import com.github.skyfe79.android.library.app.examples.counter.action.IncreaseAction
 import com.github.skyfe79.android.library.app.examples.emojicollection.actions.AddEmojiAction
 import com.github.skyfe79.android.reactcomponentkit.redux.*
+import com.github.skyfe79.android.reactcomponentkit.rx.execute
+import com.github.skyfe79.android.reactcomponentkit.util.runOnUiThread
 import com.github.skyfe79.android.reactcomponentkit.viewmodel.RCKViewModel
 import io.reactivex.Observable
 import io.reactivex.Single

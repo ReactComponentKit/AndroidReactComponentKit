@@ -1,10 +1,13 @@
 package com.github.skyfe79.android.reactcomponentkit.viewmodel
 
 import android.app.Application
+import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import com.github.skyfe79.android.reactcomponentkit.RCK
 import com.github.skyfe79.android.reactcomponentkit.StateSubscriber
 import com.github.skyfe79.android.reactcomponentkit.redux.*
+import com.github.skyfe79.android.reactcomponentkit.rx.DisposeBag
+import com.github.skyfe79.android.reactcomponentkit.rx.disposedBy
 import com.github.skyfe79.android.reactcomponentkit.util.runOnUiThread
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Observable
@@ -13,6 +16,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.newSingleThreadContext
 import java.lang.ref.WeakReference
 import java.util.concurrent.locks.ReentrantLock
 
@@ -25,6 +29,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
     private val store = Store<S>()
     private val disposables = CompositeDisposable()
     private var actionQueue: Queue<Action> = Queue()
+    private val dispatchLock = ReentrantLock()
     private val writeLock = ReentrantLock()
     private val readLock = ReentrantLock()
     private var subscribers: MutableList<WeakReference<StateSubscriber>> = mutableListOf()
@@ -56,9 +61,11 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
             .filter { action ->
                 action !is VoidAction
             }
+            .observeOn(AndroidSchedulers.mainThread())
             .filter { action ->
-                store.actionFlow(action) !is VoidAction
+                store.startFlow(action) !is VoidAction
             }
+            .observeOn(Schedulers.single())
             .flatMap { action ->
                 store.dispatch(action).toObservable()
             }
@@ -76,6 +83,7 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
                 if (newState.error != null) {
                     newState.error?.let {
                         on(it)
+                        actionQueue.clear()
                     }
                 } else {
                     dispatchStateToSubscribers(newState)
@@ -99,9 +107,14 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
      * dispatch mutated state to subscribers
      */
     private fun dispatchStateToSubscribers(state: S) {
-        on(state)
-        subscribers.forEach {
-            it.get()?.on(state)
+        dispatchLock.lock()
+        try {
+            on(state)
+            subscribers.forEach {
+                it.get()?.on(state)
+            }
+        } finally {
+            dispatchLock.unlock()
         }
     }
 
@@ -158,13 +171,18 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
             val state = this.store.state.copyState() as S
             val newState = state.block(state)
             this.store.state = newState
-            runOnUiThread {
+            if (Looper.myLooper() == Looper.getMainLooper()) {
                 dispatchStateToSubscribers(newState)
+            } else {
+                runOnUiThread {
+                    dispatchStateToSubscribers(newState)
+                }
             }
             return newState
         } finally {
             writeLock.unlock()
         }
+
     }
 
     /**
@@ -187,10 +205,9 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
     @Suppress("UNCHECKED_CAST")
     protected fun <A: Action> awaitFlow(asyncReducer: AsyncReducer<S, A>): Reducer<S, A> {
         return { _: S, action: A ->
-            val s = asyncReducer(action)
+            asyncReducer(action)
                 .subscribeOn(Schedulers.io())
                 .blockingLast(this.store.state.copyState() as S)
-            s
         }
     }
 
