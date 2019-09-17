@@ -6,16 +6,16 @@
 
 AndroidReactComponentKit is [ReactComponentKit](https://github.com/ReactComponentKit/ReactComponentKit) for Android. AndroidReactComponentKit is a library for building Activity or Fragment. You can make that based on Components. Also, It uses MVVM and Redux architectures for unidirectional data flow.
 
-<div align="center"><img src="https://raw.githubusercontent.com/ReactComponentKit/AndroidReactComponentKit/master/art/AndroidReactComponentKit.png"></div>
+<div align="center"><img src="https://raw.githubusercontent.com/ReactComponentKit/AndroidReactComponentKit/master/art/AndroidReactComponentKit_2.0.x.png"></div>
 
 ## Data Flow
 
  * (1) : Components dispatch actions
  * (2) : ViewModel passes the actions to the store. You can use beforeDispatch(action:) method to do some work before dispatching actions.
- * (3) : Store passes current state to the Redux pipeline. Middlewares, Reducers and Postwares make a new state.
- * (4) : New State comes out from the Redux pipeline. It is passed to the store.
+ * (3) : Store passes current state to the Mutation pipeline. Reducers make a new state.
+ * (4) : New State comes out from the Mutation pipeline. It is passed to the store.
  * (5) : Store passes the new state to the ViewModel.
- * (6) : ViewModel passes or propagates the new state to the Components.
+ * (6) : ViewModel passes the new state to the Components.
 
 ## Components
 
