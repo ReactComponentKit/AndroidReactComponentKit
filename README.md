@@ -6,7 +6,7 @@
 
 AndroidReactComponentKit is [ReactComponentKit](https://github.com/ReactComponentKit/ReactComponentKit) for Android. AndroidReactComponentKit is a library for building Activity or Fragment. You can make that based on Components. Also, It uses MVVM and Redux architectures for unidirectional data flow.
 
-<div align="center"><img src="https://raw.githubusercontent.com/ReactComponentKit/AndroidReactComponentKit/master/art/AndroidReactComponentKit_2.0.x.png"></div>
+<div align="center"><img src="https://raw.githubusercontent.com/ReactComponentKit/AndroidReactComponentKit/master/art/AndroidReactComponentKit_V2.png"></div>
 
 ## Data Flow
 
