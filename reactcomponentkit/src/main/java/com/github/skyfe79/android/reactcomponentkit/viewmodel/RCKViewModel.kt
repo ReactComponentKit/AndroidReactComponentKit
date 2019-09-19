@@ -31,7 +31,6 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
     private var actionQueue: Queue<Action> = Queue()
     private val dispatchLock = ReentrantLock()
     private val writeLock = ReentrantLock()
-    private val readLock = ReentrantLock()
     private var subscribers: MutableList<WeakReference<StateSubscriber>> = mutableListOf()
 
     init {
@@ -190,13 +189,13 @@ abstract class RCKViewModel<S: State>(application: Application): AndroidViewMode
      */
     @Suppress("UNCHECKED_CAST")
     fun <R> withState(block: S.(S) -> R): R {
-        readLock.lock()
-        try {
-            val state = this.store.state.copyState() as S
-            return state.block(state)
-        } finally {
-            readLock.unlock()
-        }
+        val state = state()
+        return state.block(state)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun state(): S {
+        return store.state.copyState() as S
     }
 
     /**
