@@ -49,9 +49,6 @@ class CounterViewModel(application: Application): RCKViewModel<CounterState>(app
                 { _, _ ->
                     setState { copy(asyncCount = Async.Loading) }
                 },
-                { state, action ->
-                    state.copy(count = state.count + action.payload)
-                },
                 awaitFlow(::asyncIncrease),
                 asyncFlow { action ->
                     Single.create<CounterState> { emitter ->
